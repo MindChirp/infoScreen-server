@@ -3,7 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var session = require("express-session");
 var multiparty = require("multiparty");
-
+/*
 var db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -14,7 +14,7 @@ var db = mysql.createConnection({
 db.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-});
+});*/
 
 
 
