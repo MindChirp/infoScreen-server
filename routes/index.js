@@ -43,7 +43,6 @@ router.get('/db', async (req, res) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  console.log("iujasdi")
   res.render('index', { title: 'Express' });
 });
 
@@ -68,9 +67,13 @@ router.post("/auth", async (req, res) => {
       throw err;
     }
 
+    console.log(fields)
+
+    var user = fields.user[0];
+    var pass = fields.password[0];
     try {
       const client = await pool.connect();
-      const result = await client.query("SELECT * FROM test_table");
+      const result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
       const results = { 'results': (result) ? result.rows : null};
       res.send(["OK", results])
       client.release();
