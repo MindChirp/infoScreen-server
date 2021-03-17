@@ -3,7 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var session = require("express-session");
 var multiparty = require("multiparty");
-/*
+
 var db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -14,7 +14,7 @@ var db = mysql.createConnection({
 db.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-});*/
+});
 
 
 
@@ -44,6 +44,20 @@ router.post("/auth", function (req, res) {
       res.end();
       throw err;
     }
+
+
+    var results = [
+      {
+        name: 'Frikk Ormestad Larsen',
+        email: 'frikk44@gmail.com',
+        creationDate: "2002-08-04T22:00:00.000Z",
+        subscriber: 1,
+        password: 'frikkern123'
+      }
+    ]
+    
+    res.send(["OK", results]);
+    return;
 
     //If the login sohuld be made on the calendardb servers
     //Passwords are currently unencrypted, but hey, fuck that
