@@ -3,6 +3,11 @@ var router = express.Router();
 var mysql = require('mysql');
 var session = require("express-session");
 var multiparty = require("multiparty");
+const { Pool } = require("pg");
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+}) 
 /*
 var db = mysql.createConnection({
   host: "localhost",
@@ -43,6 +48,17 @@ router.post("/auth", function (req, res) {
     if (err) {
       res.end();
       throw err;
+    }
+
+    try {
+      const client = await pool.connect();
+      const result = await client.query("SELECT * FROM test_table");
+      console.log(result);
+
+      client.release();
+    } catch (error) {
+      console.log(error);
+      res.send("ERROR " + err);
     }
 
 
