@@ -42,10 +42,14 @@ router.get('/db', async (req, res) => {
 })
 
 /* GET home page. */
+//Just incase someone were to stumble upon the server.. Oopsies :)
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/*
+
+LEGACY. GITHUB IS NOW USED AS THE AUTHENTICATION SERVER.
 
 router.post("/version-control/:ver", function(req, res) {
   var clientVer = req.params.ver;
@@ -56,6 +60,8 @@ router.post("/version-control/:ver", function(req, res) {
     res.send("OUT OF DATE.");
   }
 })
+
+*/
 
 
 /* Receive login data */
