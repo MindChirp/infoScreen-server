@@ -44,7 +44,7 @@ router.post("/version-control/:ver", function(req, res) {
 /* Receive login data */
 router.post("/auth", async (req, res) => {
   var data = new multiparty.Form();
-  data.parse(req, function (err, fields, files) {
+  data.parse(req, async (err, fields, files) => {
     if (err) {
       res.end();
       throw err;
