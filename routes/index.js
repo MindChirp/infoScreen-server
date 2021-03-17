@@ -64,6 +64,36 @@ router.post("/version-control/:ver", function(req, res) {
 */
 
 
+
+router.post("/register", async(req, res) => {
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if(err) {
+      res.end();
+      throw err;
+    }
+
+    var user = fields.user[0];
+    var email = fields.email[0];
+    var pass = fields.password[0];
+    var date = new Date();
+    var today = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear(); 
+
+    const client = await pool.connect();
+    const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "'");
+    const results = (result) ? result.rows : null;
+    console.log(results);
+    if(results) {
+      res.send(["OK", results]);
+    } else {
+      res.send("ERROR", "Wtf, could not create the user");
+    }
+
+
+  })
+})
+
+
 /* Receive login data */
 router.post("/auth", async (req, res) => {
   var data = new multiparty.Form();
@@ -72,8 +102,6 @@ router.post("/auth", async (req, res) => {
       res.end();
       throw err;
     }
-
-    console.log(fields)
 
     var user = fields.user[0];
     var pass = fields.password[0];
