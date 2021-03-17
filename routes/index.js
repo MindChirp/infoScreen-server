@@ -42,7 +42,7 @@ router.post("/version-control/:ver", function(req, res) {
 })
 
 /* Receive login data */
-router.post("/auth", function (req, res) {
+router.post("/auth", async function (req, res) {
   var data = new multiparty.Form();
   data.parse(req, function (err, fields, files) {
     if (err) {
@@ -56,23 +56,25 @@ router.post("/auth", function (req, res) {
       console.log(result);
 
       client.release();
+
+
+      var results = [
+        {
+          name: 'Frikk Ormestad Larsen',
+          email: 'frikk44@gmail.com',
+          creationDate: "2002-08-04T22:00:00.000Z",
+          subscriber: 1,
+          password: 'frikkern123'
+        }
+      ]
+      
+      res.send(["OK", results]);
     } catch (error) {
       console.log(error);
       res.send("ERROR " + err);
     }
 
 
-    var results = [
-      {
-        name: 'Frikk Ormestad Larsen',
-        email: 'frikk44@gmail.com',
-        creationDate: "2002-08-04T22:00:00.000Z",
-        subscriber: 1,
-        password: 'frikkern123'
-      }
-    ]
-    
-    res.send(["OK", results]);
     return;
 
     //If the login sohuld be made on the calendardb servers
