@@ -80,7 +80,7 @@ router.post("/register", async(req, res) => {
     var today = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear(); 
     try {
       const client = await pool.connect();
-      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "'");
+      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "');");
       const results = (result) ? result.rows : null;
       console.log(results);
       if(results) {
