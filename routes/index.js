@@ -74,7 +74,7 @@ router.post("/auth", async (req, res) => {
     try {
       const client = await pool.connect();
       const result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
-      const results = { 'results': (result) ? result.rows : null};
+      const results = (result) ? result.rows : null;
       res.send(["OK", results])
       client.release();
 
