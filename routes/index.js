@@ -78,15 +78,19 @@ router.post("/register", async(req, res) => {
     var pass = fields.password[0];
     var date = new Date();
     var today = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear(); 
-
-    const client = await pool.connect();
-    const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "'");
-    const results = (result) ? result.rows : null;
-    console.log(results);
-    if(results) {
-      res.send(["OK", results]);
-    } else {
-      res.send("ERROR", "Wtf, could not create the user");
+    try {
+      const client = await pool.connect();
+      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "'");
+      const results = (result) ? result.rows : null;
+      console.log(results);
+      if(results) {
+        res.send(["OK", results]);
+      } else {
+        res.send("ERROR", "Wtf, could not create the user");
+      }
+    } catch (error) {
+      console.log(error);
+      res.send(["ERROR", error]);
     }
 
 
