@@ -77,16 +77,16 @@ router.post("/register", async(req, res) => {
     var email = fields.email[0];
     var pass = fields.password[0];
     var date = new Date();
-    var today = date.getDay() + "/" + date.getMonth() + "/" + date.getFullYear(); 
+    var today = date.getDate() + "/" + date.getMonth()+1 + "/" + date.getFullYear(); 
     try {
       const client = await pool.connect();
       const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "');");
       const results = (result) ? result.rows : null;
       console.log(results);
-      if(results) {
-        res.send(["OK", results]);
+      if(results.length == 0) {
+        res.send(["OK"]);
       } else {
-        res.send("ERROR", "Wtf, could not create the user");
+        res.send(["ERROR", "Wtf, could not create the user"]);
       }
     } catch (error) {
       console.log(error);
