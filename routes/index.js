@@ -74,7 +74,7 @@ router.post("/auth", async (req, res) => {
 
       return;
 
-
+/*
       var results = [
         {
           name: 'Frikk Ormestad Larsen',
@@ -84,8 +84,8 @@ router.post("/auth", async (req, res) => {
           password: 'frikkern123'
         }
       ]
-      
-      res.send(["OK", results]);
+  */    
+      //res.send(["OK", results]);
     } catch (error) {
       console.log(error);
       res.send("ERROR " + err);
