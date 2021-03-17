@@ -68,9 +68,11 @@ router.post("/auth", async (req, res) => {
     try {
       const client = await pool.connect();
       const result = await client.query("SELECT * FROM test_table");
-      console.log(result);
-
+      const results = { 'results': (result) ? result.rows : null};
+      res.send(["OK", results])
       client.release();
+
+      return;
 
 
       var results = [
