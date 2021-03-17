@@ -3,13 +3,16 @@ var router = express.Router();
 var mysql = require('mysql');
 var session = require("express-session");
 var multiparty = require("multiparty");
+
 const { Pool } = require("pg");
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
-}) 
+})
+
+
 /*
 var db = mysql.createConnection({
   host: "localhost",
@@ -56,7 +59,6 @@ router.post("/version-control/:ver", function(req, res) {
 })
 
 
-router.get("/db")
 /* Receive login data */
 router.post("/auth", async (req, res) => {
   var data = new multiparty.Form();
