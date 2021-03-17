@@ -40,6 +40,7 @@ router.get('/db', async (req, res) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  console.log("iujasdi")
   res.render('index', { title: 'Express' });
 });
 
