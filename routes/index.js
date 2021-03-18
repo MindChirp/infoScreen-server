@@ -77,7 +77,7 @@ router.post("/register", async(req, res) => {
     var email = fields.email[0];
     var pass = fields.password[0];
     var date = new Date();
-    var today = date.getDate() + "/" + date.getMonth()+1 + "/" + date.getFullYear(); 
+    var today = date.getDate() + "/" + parseInt(date.getMonth()+1) + "/" + date.getFullYear(); 
     try {
       const client = await pool.connect();
       const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);");
