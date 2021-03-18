@@ -80,9 +80,8 @@ router.post("/register", async(req, res) => {
     var today = date.getDate() + "/" + date.getMonth()+1 + "/" + date.getFullYear(); 
     try {
       const client = await pool.connect();
-      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "');");
+      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);");
       const results = (result) ? result.rows : null;
-      console.log(results);
       if(results.length == 0) {
         res.send(["OK"]);
       } else {
@@ -113,7 +112,6 @@ router.post("/auth", async (req, res) => {
       const client = await pool.connect();
       const result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
       const results = (result) ? result.rows : null;
-      console.log(results);
       if(results.length != 0) {
         res.send(["OK", results])
       } else {
@@ -139,30 +137,14 @@ router.post("/auth", async (req, res) => {
       console.log(error);
       res.send("ERROR " + err);
     }
-
-
-    return;
-
-    //If the login sohuld be made on the calendardb servers
-    //Passwords are currently unencrypted, but hey, fuck that
-    console.log(fields.user[0]);
-      db.query("SELECT * FROM users WHERE email=? AND password=?", [fields.user[0], fields.password[0]], function (error, results, fields) {
-        if (error) {
-          res.send(["ERROR: COULD NOT HANDLE REQUEST"]);
-        } else {
-          if (results.length > 0) {
-            res.send(["OK", results]);
-            req.session.loggedIn = true;
-            req.session.username = results[0].username;
-            req.session.save();
-          } else {
-            res.send(["INCORRECT"]);
-          }
-        }
-      })
   })
 })
 
+
+
+/*
+
+THIS IS LEGACY CODE FROM ANOTHER PROJECT. HOWEVER, IT MIGHT BE USED TO STORE PROFILE PICTURES AND SO ON..
 
 router.post("/bilder/upload", function(req, res) {
   if(req.session.loggedin && req.session.admin) {
@@ -181,6 +163,8 @@ router.post("/bilder/upload", function(req, res) {
   }
 
 }); 
+
+*/
 
 
 
