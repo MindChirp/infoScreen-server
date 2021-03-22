@@ -160,10 +160,10 @@ router.get('/feedBackLogs', async function(req, res) {
     //Fetch the logs
     try {
 
-      pool.query('SELECT * FROM feedback', (err, res) => {
+      pool.query('SELECT * FROM feedback', (err, result) => {
 
         pool.end();
-        res.send(["OK", res.rows]);
+        res.send(["OK", result.rows]);
       });
       //var client = await pool.connect();
       //var result = await client.query("SELECT * FROM feedback;");
