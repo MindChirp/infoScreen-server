@@ -159,9 +159,16 @@ router.get('/feedBackLogs', async function(req, res) {
 
     //Fetch the logs
     try {
-      var client = await pool.connect();
-      var result = await client.query("SELECT * FROM feedback;");
-      client.end();
+
+      pool.query('SELECT * FROM feedback', (err, res) => {
+
+        console.log(res);
+        pool.end();
+      });
+      //var client = await pool.connect();
+      //var result = await client.query("SELECT * FROM feedback;");
+
+      /*
       var results = (result) ? result.rows : null;
       console.log("heyheyhey")
       if(results.length != 0) {
@@ -169,10 +176,11 @@ router.get('/feedBackLogs', async function(req, res) {
       } else {
         res.send(["ERROR", "There is no feedback to display"]);
       }
-
+      */
     } catch (error) {
       res.send(["ERROR", error]);      
     }
+    
   } else {
     var msg = "USER IS NOT DEVELOPER";
     console.log(msg);
