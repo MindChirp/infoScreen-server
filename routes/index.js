@@ -152,7 +152,7 @@ router.get('/feedBackLogs', async function(req, res) {
     res.send(["ERROR", "Request timed out"]);
   })
   if(!req.session.loggedin) {
-    res.send(["ERROR", "User is not signed in"]);
+    res.send(["ERROR", "Server cannot authenticate the user"]);
     return;
   }
   if(req.session.isDeveloper) {
