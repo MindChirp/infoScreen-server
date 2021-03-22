@@ -148,6 +148,9 @@ router.post("/auth", async (req, res) => {
 
 
 router.get('/feedBackLogs', async function(req, res) {
+  req.setTimeout(7000, ()=>{
+    res.send(["ERROR", "Request timed out"]);
+  })
   if(!req.session.loggedin) {
     res.send(["ERROR", "User is not signed in"]);
     return;
