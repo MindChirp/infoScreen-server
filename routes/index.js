@@ -12,6 +12,11 @@ const pool = new Pool({
   }
 })
 
+pool.on("error", (err, client) => {
+  console.log("Unexpected error ", err);
+  process.exit(-1);
+})
+
 
 /*
 var db = mysql.createConnection({
@@ -159,43 +164,20 @@ router.get('/feedBackLogs', async function(req, res) {
 
     //Fetch the logs
     
-    try {
-
-      const client = new Client();
-      await client.connect();
-
-      client.query("SELECT * FROM feedback", (err, result) => {
-        if(err) {
-          console.log(err);
-          res.send(["ERROR", err]);
-        } else {
-          console.log(resultrows);
-          res.send(["OK", result.rows]);
-        }
-      })
-
-      /*var result = await client.query("SELECT * FROM feedback");
-      await client.end();
-      console.log(result);
-      res.send(["OK", result]);*/
-
-      //var client = await pool.connect();
-      //var result = await client.query("SELECT * FROM feedback;");
-
-      /*
-      var results = (result) ? result.rows : null;
-      console.log("heyheyhey")
-      if(results.length != 0) {
-        res.send(["OK", results]);
+  // callback - checkout a client
+  pool.connect((err, client, done) => {
+    if (err) throw err
+    client.query('SELECT * FROM users WHERE id = $1', [1], (err, resu) => {
+      done()
+      if (err) {
+        console.log(err.stack)
+        res.send(["ERROR", err]);
       } else {
-        res.send(["ERROR", "There is no feedback to display"]);
+        console.log(resu.rows[0])
+        res.send(["OK", resu.rows]);
       }
-      */
-     
-    } catch (error) {
-      console.log(error);
-      res.send(["ERROR", error]);      
-    }
+    })
+  })
     
   } else {
     var msg = "USER IS NOT DEVELOPER";
