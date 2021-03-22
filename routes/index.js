@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const session = require("express-session");
 const multiparty = require("multiparty");
 
-const { Pool } = require("pg");
+const { Pool, Client } = require("pg");
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -159,17 +159,16 @@ router.get('/feedBackLogs', async function(req, res) {
 
     //Fetch the logs
     
-    //try {
+    try {
 
-      pool.query('SELECT * FROM feedback', (err, result) => {
-        if(err) {
-          console.log(err);
-          res.send(["ERROR", err])
-          return;
-        }
-        pool.end();
-        res.send(["OK", result.rows]);
-      });
+      var client = new Client();
+      await client.connect();
+
+      var result = await client.query("SELECT * FROM feedback");
+      await client.end();
+      console.log(result);
+      res.send(["OK", result]);
+
       //var client = await pool.connect();
       //var result = await client.query("SELECT * FROM feedback;");
 
@@ -182,10 +181,10 @@ router.get('/feedBackLogs', async function(req, res) {
         res.send(["ERROR", "There is no feedback to display"]);
       }
       */
-     /*
+     
     } catch (error) {
       res.send(["ERROR", error]);      
-    }*/
+    }
     
   } else {
     var msg = "USER IS NOT DEVELOPER";
