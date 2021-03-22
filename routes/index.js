@@ -163,6 +163,7 @@ router.get('/feedBackLogs', async function(req, res) {
 
       pool.query('SELECT * FROM feedback', (err, result) => {
         if(err) {
+          console.log(err);
           res.send(["ERROR", err])
           return;
         }
