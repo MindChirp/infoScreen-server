@@ -118,7 +118,6 @@ router.post("/auth", async (req, res) => {
       const results = (result) ? result.rows : null;
       if(results.length != 0) {
         req.session.loggedin = true;
-        console.log(results[0].developer);
         req.session.isDeveloper = results[0].developer;
         res.send(["OK", results]);
       } else {
@@ -145,8 +144,20 @@ router.post("/auth", async (req, res) => {
       res.send("ERROR " + err);
     }
   })
-})
+});
 
+
+router.get('/feedBackLogs', function(req, res) {
+  if(req.session.isDeveloper) {
+    var msg = "USER IS DEVELOPER";
+    console.log(msg);
+    res.send([msg]);
+  } else {
+    var msg = "USER IS NOT DEVELOPER";
+    console.log(msg);
+    res.send([msg]);
+  }
+});
 
 
 /*
