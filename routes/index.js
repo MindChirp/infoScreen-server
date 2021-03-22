@@ -161,13 +161,23 @@ router.get('/feedBackLogs', async function(req, res) {
     
     try {
 
-      var client = new Client();
+      const client = new Client();
       await client.connect();
 
-      var result = await client.query("SELECT * FROM feedback");
+      client.query("SELECT * FROM feedback", (err, result) => {
+        if(err) {
+          console.log(err);
+          res.send(["ERROR", err]);
+        } else {
+          console.log(resultrows);
+          res.send(["OK", result.rows]);
+        }
+      })
+
+      /*var result = await client.query("SELECT * FROM feedback");
       await client.end();
       console.log(result);
-      res.send(["OK", result]);
+      res.send(["OK", result]);*/
 
       //var client = await pool.connect();
       //var result = await client.query("SELECT * FROM feedback;");
@@ -183,6 +193,7 @@ router.get('/feedBackLogs', async function(req, res) {
       */
      
     } catch (error) {
+      console.log(error);
       res.send(["ERROR", error]);      
     }
     
