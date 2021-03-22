@@ -128,11 +128,45 @@ router.post("/auth", async (req, res) => {
         } else {
           console.log(resu.rows[0])
           if(resu.rows[0]) {
+            req.session.loggedin = true;
+            req.session.isDeveloper = resu.rows[0].developer;
             res.send(["OK", resu.rows]);
           }
         }
       })
     })
+
+    try {
+      var client = await pool.connect();
+      var result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
+      var results = (result) ? result.rows : null;
+      if(results.length != 0) {
+        req.session.loggedin = true;
+        req.session.isDeveloper = results[0].developer;
+        res.send(["OK", results]);
+      } else {
+        res.send(["INCORRECT"]);
+      }
+      client.release();
+
+      return;
+
+/*
+      var results = [
+        {
+          name: 'Frikk Ormestad Larsen',
+          email: 'frikk44@gmail.com',
+          creationDate: "2002-08-04T22:00:00.000Z",
+          subscriber: 1,
+          password: 'frikkern123'
+        }
+      ]
+  */    
+      //res.send(["OK", results]);
+    } catch (error) {
+      console.log(error);
+      res.send("ERROR " + err);
+    }
   })
 });
 
