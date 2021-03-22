@@ -89,6 +89,45 @@ router.post("/register", async(req, res) => {
 })
 
 
+
+// Post feedback to database
+router.post("/postFeedBack", async (req, res) => {
+  if(!req.session.loggedIn) {res.send(["ERROR", "User must be signed in"]); return;}
+
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.end();
+      throw err;
+    }
+
+    var subj = fields.subject[0];
+    var email = fields.email[0];
+    var body = fields.body[0];
+
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      client.query("INSERT INTO feedback VALUES('" + subj + "', '" + email + "', '" + body + "');", (err, resu) => {
+        done()
+        if (err) {
+          console.log(err.stack)
+          res.send(["ERROR", err]);
+        } else {
+          if(resu.rows[0].length == 0) {
+            res.send(["OK"]);
+          } else {
+            res.send(["ERROR", resu]);
+          }
+        }
+      })
+    })
+  })
+});
+
+
+
+
+
 /* Receive login data */
 router.post("/auth", async (req, res) => {
   if(req.session.loggedIn) {
