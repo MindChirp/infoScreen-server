@@ -144,8 +144,11 @@ router.get('/feedBackLogs', async function(req, res) {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
-          console.log(resu.rows[0])
-          res.send(["OK", resu.rows]);
+          if(resu.rows.length > 0) {
+            res.send(["OK", resu.rows]);
+          } else {
+            res.send(["ERROR", "There is nothing to load"]);
+          }
         }
       })
     })
