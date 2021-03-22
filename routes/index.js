@@ -113,9 +113,9 @@ router.post("/auth", async (req, res) => {
     var user = fields.user[0];
     var pass = fields.password[0];
     try {
-      const client = await pool.connect();
-      const result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
-      const results = (result) ? result.rows : null;
+      var client = await pool.connect();
+      var result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
+      var results = (result) ? result.rows : null;
       if(results.length != 0) {
         req.session.loggedin = true;
         req.session.isDeveloper = results[0].developer;
@@ -155,14 +155,19 @@ router.get('/feedBackLogs', async function(req, res) {
   if(req.session.isDeveloper) {
 
     //Fetch the logs
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM feedback;");
-    const results = (result) ? result.rows : null;
+    try {
+      var client = await pool.connect();
+      var result = await client.query("SELECT * FROM feedback;");
+      var results = (result) ? result.rows : null;
+  
+      if(results.length != 0) {
+        res.send(["OK", results]);
+      } else {
+        res.send(["ERROR", "There is no feedback to display"]);
+      }
 
-    if(results.length != 0) {
-      res.send(["OK", results]);
-    } else {
-      res.send(["ERROR", "There is no feedback to display"]);
+    } catch (error) {
+      res.send(["ERROR", error]);      
     }
   } else {
     var msg = "USER IS NOT DEVELOPER";
