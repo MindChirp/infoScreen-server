@@ -167,7 +167,7 @@ router.get('/feedBackLogs', async function(req, res) {
   // callback - checkout a client
   pool.connect((err, client, done) => {
     if (err) throw err
-    client.query('SELECT * FROM users WHERE id = $1', [1], (err, resu) => {
+    client.query('SELECT * FROM feedback', (err, resu) => {
       done()
       if (err) {
         console.log(err.stack)
