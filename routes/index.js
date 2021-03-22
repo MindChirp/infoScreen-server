@@ -92,7 +92,7 @@ router.post("/register", async(req, res) => {
 
 // Post feedback to database
 router.post("/postFeedBack", async (req, res) => {
-  if(!req.session.loggedIn) {res.send(["ERROR", "User must be signed in"]); return;}
+  if(!req.session.loggedin) {res.send(["ERROR", "User must be signed in"]); return;}
 
   var data = new multiparty.Form();
   data.parse(req, async (err, fields, files) => {
