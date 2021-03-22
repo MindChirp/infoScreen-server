@@ -161,6 +161,7 @@ router.get('/feedBackLogs', async function(req, res) {
     try {
       var client = await pool.connect();
       var result = await client.query("SELECT * FROM feedback;");
+      pool.end();
       var results = (result) ? result.rows : null;
       console.log("heyheyhey")
       if(results.length != 0) {
