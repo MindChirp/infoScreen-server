@@ -31,21 +31,6 @@ db.connect(function(err) {
   console.log("Connected!");
 });*/
 
-
-
-router.get('/db', async (req, res) => {
-  try {
-    var client = await pool.connect();
-    const result = await client.query('SELECT * FROM test_table');
-    const results = { 'results': (result) ? result.rows : null};
-    res.send(JSON.stringify(results));
-    client.release();
-  } catch (err) {
-    console.error(err);
-    res.send("Error " + err);
-  }
-})
-
 /* GET home page. */
 //Just incase someone were to stumble upon the server.. Oopsies :)
 router.get('/', function(req, res, next) {
@@ -83,21 +68,23 @@ router.post("/register", async(req, res) => {
     var pass = fields.password[0];
     var date = new Date();
     var today = date.getDate() + "/" + parseInt(date.getMonth()+1) + "/" + date.getFullYear(); 
-    try {
-      var client = await pool.connect();
-      const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);");
-      const results = (result) ? result.rows : null;
-      if(results.length == 0) {
-        res.send(["OK"]);
-      } else {
-        res.send(["ERROR", "Wtf, could not create the user"]);
-      }
-    } catch (error) {
-      console.log(error);
-      res.send(["ERROR", error]);
-    }
 
-
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);", (err, resu) => {
+        done()
+        if (err) {
+          console.log(err.stack)
+          res.send(["ERROR", err]);
+        } else {
+          if(resu.rows.length == 0) {
+            res.send(["OK"]);
+          } else {
+            res.send(["ERROR", "Wtf, could not create the user"])
+          }
+        }
+      })
+    })
   })
 })
 
@@ -126,7 +113,6 @@ router.post("/auth", async (req, res) => {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
-          console.log(resu.rows[0])
           if(resu.rows[0]) {
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
@@ -135,38 +121,6 @@ router.post("/auth", async (req, res) => {
         }
       })
     })
-
-    try {
-      var client = await pool.connect();
-      var result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
-      var results = (result) ? result.rows : null;
-      if(results.length != 0) {
-        req.session.loggedin = true;
-        req.session.isDeveloper = results[0].developer;
-        res.send(["OK", results]);
-      } else {
-        res.send(["INCORRECT"]);
-      }
-      client.release();
-
-      return;
-
-/*
-      var results = [
-        {
-          name: 'Frikk Ormestad Larsen',
-          email: 'frikk44@gmail.com',
-          creationDate: "2002-08-04T22:00:00.000Z",
-          subscriber: 1,
-          password: 'frikkern123'
-        }
-      ]
-  */    
-      //res.send(["OK", results]);
-    } catch (error) {
-      console.log(error);
-      res.send("ERROR " + err);
-    }
   })
 });
 
