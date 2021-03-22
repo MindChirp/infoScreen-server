@@ -12,6 +12,7 @@ const pool = new Pool({
   }
 })
 
+const client = pool.connect();
 
 /*
 var db = mysql.createConnection({
@@ -30,7 +31,7 @@ db.connect(function(err) {
 
 router.get('/db', async (req, res) => {
   try {
-    const client = await pool.connect();
+    //const client = await pool.connect();
     const result = await client.query('SELECT * FROM test_table');
     const results = { 'results': (result) ? result.rows : null};
     res.send(JSON.stringify(results));
@@ -79,7 +80,7 @@ router.post("/register", async(req, res) => {
     var date = new Date();
     var today = date.getDate() + "/" + parseInt(date.getMonth()+1) + "/" + date.getFullYear(); 
     try {
-      const client = await pool.connect();
+      //const client = await pool.connect();
       const result = await client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);");
       const results = (result) ? result.rows : null;
       if(results.length == 0) {
@@ -113,7 +114,7 @@ router.post("/auth", async (req, res) => {
     var user = fields.user[0];
     var pass = fields.password[0];
     try {
-      var client = await pool.connect();
+      //var client = await pool.connect();
       var result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
       var results = (result) ? result.rows : null;
       if(results.length != 0) {
@@ -159,7 +160,7 @@ router.get('/feedBackLogs', async function(req, res) {
 
     //Fetch the logs
     try {
-      var client = await pool.connect();
+      //var client = await pool.connect();
       var result = await client.query("SELECT * FROM feedback;");
       var results = (result) ? result.rows : null;
       console.log("heyheyhey")
