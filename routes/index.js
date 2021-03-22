@@ -158,10 +158,14 @@ router.get('/feedBackLogs', async function(req, res) {
   if(req.session.isDeveloper) {
 
     //Fetch the logs
-    try {
+    
+    //try {
 
       pool.query('SELECT * FROM feedback', (err, result) => {
-
+        if(err) {
+          res.send(["ERROR", err])
+          return;
+        }
         pool.end();
         res.send(["OK", result.rows]);
       });
@@ -177,9 +181,10 @@ router.get('/feedBackLogs', async function(req, res) {
         res.send(["ERROR", "There is no feedback to display"]);
       }
       */
+     /*
     } catch (error) {
       res.send(["ERROR", error]);      
-    }
+    }*/
     
   } else {
     var msg = "USER IS NOT DEVELOPER";
