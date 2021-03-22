@@ -113,7 +113,7 @@ router.post("/postFeedBack", async (req, res) => {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
-          if(resu.rows[0].length == 0) {
+          if(resu.rows.length == 0) {
             res.send(["OK"]);
           } else {
             res.send(["ERROR", resu]);
