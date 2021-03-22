@@ -148,7 +148,7 @@ router.post("/auth", async (req, res) => {
 
 
 router.get('/feedBackLogs', async function(req, res) {
-  if(!req.session.loggedIn) {
+  if(!req.session.loggedin) {
     res.send(["ERROR", "User is not signed in"]);
     return;
   }
