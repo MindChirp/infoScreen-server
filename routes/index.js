@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var mysql = require('mysql');
-var session = require("express-session");
-var multiparty = require("multiparty");
+const express = require('express');
+const router = express.Router();
+const mysql = require('mysql');
+const session = require("express-session");
+const multiparty = require("multiparty");
 
 const { Pool } = require("pg");
 const pool = new Pool({
@@ -99,6 +99,10 @@ router.post("/register", async(req, res) => {
 
 /* Receive login data */
 router.post("/auth", async (req, res) => {
+  if(req.session.loggedIn) {
+    res.send(["USER ALREADY SIGNED IN"]);
+    return;
+  }
   var data = new multiparty.Form();
   data.parse(req, async (err, fields, files) => {
     if (err) {
@@ -113,7 +117,10 @@ router.post("/auth", async (req, res) => {
       const result = await client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';");
       const results = (result) ? result.rows : null;
       if(results.length != 0) {
-        res.send(["OK", results])
+        req.session.loggedin = true;
+        console.log(results[0].developer);
+        req.session.isDeveloper = results[0].developer;
+        res.send(["OK", results]);
       } else {
         res.send(["INCORRECT"]);
       }
