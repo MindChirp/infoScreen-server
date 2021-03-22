@@ -147,7 +147,7 @@ router.post("/auth", async (req, res) => {
 });
 
 
-router.get('/feedBackLogs', function(req, res) {
+router.get('/feedBackLogs', async function(req, res) {
   if(!req.session.loggedIn) {
     res.send(["ERROR", "User is not signed in"]);
     return;
