@@ -148,10 +148,22 @@ router.post("/auth", async (req, res) => {
 
 
 router.get('/feedBackLogs', function(req, res) {
+  if(!req.session.loggedIn) {
+    res.send(["ERROR", "User is not signed in"]);
+    return;
+  }
   if(req.session.isDeveloper) {
-    var msg = "USER IS DEVELOPER";
-    console.log(msg);
-    res.send([msg]);
+
+    //Fetch the logs
+    const client = await pool.connect();
+    const result = await client.query("SELECT * FROM feedback;");
+    const results = (result) ? result.rows : null;
+
+    if(results.length != 0) {
+      res.send(["OK", results]);
+    } else {
+      res.send(["ERROR", "There is no feedback to display"]);
+    }
   } else {
     var msg = "USER IS NOT DEVELOPER";
     console.log(msg);
