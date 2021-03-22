@@ -148,7 +148,6 @@ router.post("/auth", async (req, res) => {
 
 
 router.get('/feedBackLogs', async function(req, res) {
-  console.log("asdasdsad")
   if(!req.session.loggedin) {
     res.send(["ERROR", "User is not signed in"]);
     return;
@@ -160,7 +159,7 @@ router.get('/feedBackLogs', async function(req, res) {
       var client = await pool.connect();
       var result = await client.query("SELECT * FROM feedback;");
       var results = (result) ? result.rows : null;
-  
+      console.log("heyheyhey")
       if(results.length != 0) {
         res.send(["OK", results]);
       } else {
