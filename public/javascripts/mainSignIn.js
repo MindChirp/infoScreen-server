@@ -5,7 +5,7 @@ function signIn(e, el) {
     var parent = el.closest(".submission-form");
 
     var email = parent.getElementsByTagName("input")[0].value;
-    var pass = parent.getElementsByTagName("input")[0].value;
+    var pass = parent.getElementsByTagName("input")[1].value;
 
     var formData = new FormData();
     formData.append("user", email);
@@ -16,9 +16,8 @@ function signIn(e, el) {
     xhr.send(formData);
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200) {
-            console.log("OKKKKK")
             var res = JSON.parse(this.responseText);
-            console.log(res[0]);
+            window.location.href = "/main";
         } else if(this.readyState == 4 && this.status != 200) {
             console.log(this.responseText);
         }
