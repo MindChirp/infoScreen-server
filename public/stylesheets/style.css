@@ -1,8 +1,63 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+:root {
+  --main-bg-color: #171F26;
+  --main-button-color: #1B2630;
+  --secondary-button-color: #121a21;
+  --dark-secondary-button-color: #070b0e;
+  --title-color: white;
+  --secondary-color: rgb(15, 20, 25);
+  --paragraph-color: rgb(220,220,220);
+  --slider-color: #0075ff;
+  font-size: 16px;
 }
 
-a {
-  color: #00B7FF;
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: var(--main-bg-color);
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+#msg {
+  width: fit-content;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--title-color);
+  font-size: 2rem;
+  transform:translate(-50%, -50%);
+  animation: fade-in-slide-up 2s ease-in-out 1s;
+  animation-fill-mode: both;
+}
+
+#submsg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--title-color);
+  font-size: 2rem;
+  transform:translate(-50%, -50%);
+  animation: fade-in 300ms ease-in-out 2.5s;
+  animation-fill-mode: both;
+  font-size:1.3rem;
+  color: rgb(100,100,100);
+}
+
+@keyframes fade-in-slide-up {
+  0%{opacity: 0}
+  20%{opacity:1}
+  70%{transform: translate(-50%, -50%)}
+  100%{transform: translate(-50%, -120%)}
+}
+
+@keyframes fade-in {
+  0%{opacity: 0}
+  100%{opacity:1}
 }
