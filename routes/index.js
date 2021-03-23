@@ -21,6 +21,23 @@ pool.on("error", (err, client) => {
 
 
 
+router.get('/main', function(req, res, next) {
+  console.log(req.session)
+  if(!req.session.loggedin) {
+    res.redirect("/");
+    return;
+  }
+  var source = req.headers['user-agent'],
+  ua = useragent.parse(source);
+  if(ua.isIE) {
+    //Is internet explorer, redirect
+    res.render("notSupported");
+  }
+
+});
+
+
+
 router.get('/', function(req, res, next) {
   var source = req.headers['user-agent'],
   ua = useragent.parse(source);
@@ -28,6 +45,8 @@ router.get('/', function(req, res, next) {
     //Is internet explorer, redirect
     res.render("notSupported");
   }
+
+  
 
   if(!req.loggedin) {
     res.locals.signedIn = false;
