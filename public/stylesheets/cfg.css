@@ -1,0 +1,77 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: bahnschrift;
+    /*font-family: Product Sans;*/
+    overflow-x: hidden;
+    background-color: var(--main-bg-color);
+}
+/*
+@font-face {
+    font-family: 'Product Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+  }*/
+
+
+  :root {
+    --main-bg-color: #171F26;
+    --main-button-color: #1B2630;
+    --secondary-button-color: #121a21;
+    --dark-secondary-button-color: #070b0e;
+    --title-color: white;
+    --secondary-color: rgb(15, 20, 25);
+    --paragraph-color: rgb(220,220,220);
+    --slider-color: #0075ff;
+    font-size: 16px;
+  }
+
+
+  .smooth-shadow {
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+              0 2px 2px rgba(0,0,0,0.12), 
+              0 4px 4px rgba(0,0,0,0.12), 
+              0 8px 8px rgba(0,0,0,0.12),
+              0 16px 16px rgba(0,0,0,0.12);
+  }
+
+
+  .button.stdStyle {
+        text-transform: uppercase;
+  background-color: #1a1a1a;
+  top: 0;
+  border-style: none;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px 30px 20px 30px;
+  line-height: 0px;
+  color: white;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  margin-bottom: 1vh;
+  font-size: 1.5vh;
+  }
+  
+  .button.stdStyle:hover {
+      background-color: #555555;
+      cursor: pointer;
+  }
+  h1 {
+      color: var(--title-color);
+  }
+
+  p {
+    color: var(--paragraph-color);
+  }
+
+  @keyframes fade-in {
+      0%{opacity: 0}
+      100%{opacity: 1}
+  }

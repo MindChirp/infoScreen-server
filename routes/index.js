@@ -3,6 +3,7 @@ const router = express.Router();
 const mysql = require('mysql');
 const session = require("express-session");
 const multiparty = require("multiparty");
+const useragent = require("express-useragent");
 
 const { Pool, Client } = require("pg");
 const pool = new Pool({
@@ -18,40 +19,27 @@ pool.on("error", (err, client) => {
 })
 
 
-/*
-var db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "infoscreen"
-});
 
-db.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-});*/
 
-/* GET home page. */
-//Just incase someone were to stumble upon the server.. Oopsies :)
 router.get('/', function(req, res, next) {
+  var source = req.headers['user-agent'],
+  ua = useragent.parse(source);
+  if(ua.isIE) {
+    //Is internet explorer, redirect
+    res.render("notSupported");
+  }
+
+  if(!req.loggedin) {
+    res.locals.signedIn = false;
+    res.render("notSignedIn");
+
+    res.send("USER NOT SIGNED IN");
+  } 
   res.render('index', { title: 'Express' });
 });
 
-/*
 
-LEGACY. GITHUB IS NOW USED AS THE AUTHENTICATION SERVER.
 
-router.post("/version-control/:ver", function(req, res) {
-  var clientVer = req.params.ver;
-  console.log(clientVer);
-  if(clientVer == "0.0.2") {
-    res.send("OK!");
-  } else{
-    res.send("OUT OF DATE.");
-  }
-})
-
-*/
 
 
 
@@ -223,8 +211,5 @@ router.post("/bilder/upload", function(req, res) {
 }); 
 
 */
-
-
-
 
 module.exports = router;
