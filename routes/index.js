@@ -137,6 +137,7 @@ router.post("/postFeedBack", async (req, res) => {
 
 /* Receive login data */
 router.post("/auth", async (req, res) => {
+  console.log(req.session.loggedin);
   if(req.session.loggedIn) {
     res.send(["USER ALREADY SIGNED IN"]);
     return;
