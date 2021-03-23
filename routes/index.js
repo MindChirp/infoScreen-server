@@ -34,7 +34,7 @@ router.get('/main', function(req, res, next) {
     //Is internet explorer, redirect
     res.render("notSupported");
   }
-  res.render("main")
+  res.end();
 });
 
 
