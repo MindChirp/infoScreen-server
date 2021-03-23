@@ -35,6 +35,8 @@ html {
   transform:translate(-50%, -50%);
   animation: fade-in-slide-up 2s ease-in-out 1s;
   animation-fill-mode: both;
+  background-color: var(--main-bg-color);
+  z-index: 2;
 }
 
 #submsg {
