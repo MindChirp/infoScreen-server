@@ -8,7 +8,7 @@ function signIn(e, el) {
     var pass = parent.getElementsByTagName("input")[0].value;
 
     var formData = new FormData();
-    formData.append("email", email);
+    formData.append("user", email);
     formData.append("password", pass);
 
     var xhr = new XMLHttpRequest();
