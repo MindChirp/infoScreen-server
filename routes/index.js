@@ -48,7 +48,7 @@ router.get('/', function(req, res, next) {
 
   
 
-  if(!req.loggedin) {
+  if(!req.session.loggedin) {
     res.locals.signedIn = false;
     res.render("notSignedIn");
 
@@ -138,7 +138,7 @@ router.post("/postFeedBack", async (req, res) => {
 /* Receive login data */
 router.post("/auth", async (req, res) => {
   console.log(req.session.loggedin);
-  if(req.session.loggedIn) {
+  if(req.session.loggedin) {
     res.send(["USER ALREADY SIGNED IN"]);
     return;
   }
@@ -161,6 +161,7 @@ router.post("/auth", async (req, res) => {
           res.send(["ERROR", err]);
         } else {
           if(resu.rows[0]) {
+            console.log("SETTING STATE TO LOGGED IN")
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
             res.send(["OK", resu.rows]);
