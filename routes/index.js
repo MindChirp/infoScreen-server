@@ -161,6 +161,7 @@ router.post("/auth", async (req, res) => {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
+          console.log(resu.rows);
           if(resu.rows[0]) {
             console.log("SETTING STATE TO LOGGED IN")
             req.session.loggedin = true;

@@ -12,7 +12,7 @@ function signIn(e, el) {
     formData.append("password", pass);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://shrouded-wave-54128.herokuapp.com/auth");
+    xhr.open("POST", "/auth");
     xhr.send(formData);
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200) {
