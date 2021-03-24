@@ -7,7 +7,7 @@ const useragent = require("express-useragent");
 
 const { Pool, Client } = require("pg");
 var pool;
-if(process.env.DEVELOPERMODE) {
+if(!process.env.HEROKU) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     user: "postgres",
@@ -17,9 +17,9 @@ if(process.env.DEVELOPERMODE) {
 } else {
   pool = new Pool({
    connectionString: process.env.DATABASE_URL,
-   user: "postgres",
-   database: "postgres",
-   password: "8Frikkfrikkern8"
+   ssl: {
+     rejectUnauthorized: false
+   }
  })
 }
 
