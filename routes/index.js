@@ -10,9 +10,7 @@ var pool;
 if(!process.env.HEROKU) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    user: "postgres",
-    database: "postgres",
-    password: "8Frikkfrikkern8"
+
   })
 } else {
   pool = new Pool({
