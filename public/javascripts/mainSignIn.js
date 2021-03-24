@@ -20,6 +20,8 @@ function signIn(e, el) {
             window.location.href = "/main";
         } else if(this.readyState == 4 && this.status != 200) {
             console.log(this.responseText);
+            window.location.href = "/main";
+
         }
     }
 }

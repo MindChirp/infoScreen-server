@@ -22,7 +22,7 @@ pool.on("error", (err, client) => {
 
 
 router.get('/main', function(req, res, next) {
-  console.log(req.session)
+  console.log(req.session);
   /*
   if(!req.session.loggedin) {
     res.redirect("/");
@@ -34,7 +34,7 @@ router.get('/main', function(req, res, next) {
     //Is internet explorer, redirect
     res.render("notSupported");
   }
-  res.end();
+  res.sender("main");
 });
 
 
