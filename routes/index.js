@@ -6,12 +6,22 @@ const multiparty = require("multiparty");
 const useragent = require("express-useragent");
 
 const { Pool, Client } = require("pg");
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-})
+var pool;
+if(process.env.DEVELOPERMODE) {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    user: "postgres",
+    database: "postgres",
+    password: "8Frikkfrikkern8"
+  })
+} else {
+  pool = new Pool({
+   connectionString: process.env.DATABASE_URL,
+   user: "postgres",
+   database: "postgres",
+   password: "8Frikkfrikkern8"
+ })
+}
 
 pool.on("error", (err, client) => {
   console.log("Unexpected error ", err);
@@ -23,11 +33,10 @@ pool.on("error", (err, client) => {
 
 router.get('/main', function(req, res, next) {
   console.log(req.session);
-  /*
   if(!req.session.loggedin) {
     res.redirect("/");
     return;
-  }*/
+  }
   var source = req.headers['user-agent'],
   ua = useragent.parse(source);
   if(ua.isIE) {
@@ -138,7 +147,6 @@ router.post("/postFeedBack", async (req, res) => {
 
 /* Receive login data */
 router.post("/auth", async (req, res) => {
-  console.log(req.session.loggedin);
   if(req.session.loggedin) {
     res.send(["USER ALREADY SIGNED IN"]);
     return;
@@ -153,8 +161,12 @@ router.post("/auth", async (req, res) => {
     var user = fields.user[0];
     var pass = fields.password[0];
 
+    console.log(user, pass);
     pool.connect((err, client, done) => {
-      if (err) throw err
+      if (err) {
+        console.log(err);
+        return;
+      }
       client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';", (err, resu) => {
         done()
         if (err) {
@@ -167,6 +179,12 @@ router.post("/auth", async (req, res) => {
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
             res.send(["OK", resu.rows]);
+          } else {
+            req.session.loggedin = false;
+            req.session.isDeveloper = 0;
+            res.status(403).send({
+              message: 'Access denied!'
+            });
           }
         }
       })

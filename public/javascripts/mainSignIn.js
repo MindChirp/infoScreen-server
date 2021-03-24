@@ -14,13 +14,18 @@ function signIn(e, el) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/auth");
     xhr.send(formData);
+    xhr.onerror = function(err) {
+        console.log(err);
+    }
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200) {
             var res = JSON.parse(this.responseText);
+            console.log(res);
             window.location.href = "/main";
         } else if(this.readyState == 4 && this.status != 200) {
-            console.log(this.responseText);
-            window.location.href = "/main";
+            var res = JSON.parse(this.responseText);
+            alert(res.message);
+            //window.location.href = "/main";
 
         }
     }
