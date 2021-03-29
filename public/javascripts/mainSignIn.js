@@ -20,8 +20,12 @@ function signIn(e, el) {
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200) {
             var res = JSON.parse(this.responseText);
-            console.log(res);
-            window.location.href = "/main";
+            document.body.style.animation = "slide-out-right 400ms ease-in-out"
+            document.body.style.animationFillMode = "both"
+            localStorage.setItem("userInfo", JSON.stringify(res));
+            setTimeout(()=>{
+                window.location.href = "/main";
+            }, 500)
         } else if(this.readyState == 4 && this.status != 200) {
             var res = JSON.parse(this.responseText);
             alert(res.message);

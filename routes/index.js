@@ -10,7 +10,9 @@ var pool;
 if(!process.env.HEROKU) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-
+    user: 'postgres',
+    password: '8Frikkfrikkern8',
+    database: 'postgres'
   })
 } else {
   pool = new Pool({
@@ -47,12 +49,25 @@ router.get('/main', function(req, res, next) {
 
 
 router.get('/', function(req, res, next) {
-  var source = req.headers['user-agent'],
+  var source = req.headers['user-agent'];
   ua = useragent.parse(source);
   if(ua.isIE) {
     //Is internet explorer, redirect
+    res.locals.title = "Your Browser is Not Supported";
+    res.locals.body = "Try using Chrome, Edge, Opera, or something else.";
     res.render("notSupported");
+  } else if(ua.isMobile) {
+    res.locals.title = "Mobile Devices aren't Supported Yet"
+    res.locals.body = "Try using a desktop device instead.";
+    res.render("notSupported")
   }
+
+router.get('/signOut', (req, res) => {
+  if(!req.session.loggedin) res.send("NO.");
+
+  req.session.loggedin = false;
+  res.redirect("/");
+})
 
   
 
@@ -62,7 +77,7 @@ router.get('/', function(req, res, next) {
 
     res.send("USER NOT SIGNED IN");
   } 
-  res.render('index', { title: 'Express' });
+  res.redirect("/main");
 });
 
 

@@ -1,8 +1,465 @@
 #top-bar {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: fit-content;
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;    
+    font-family: bahnschrift;
+    /*font-family: Product Sans;*/
+    overflow-x: hidden;
+    background-color: var(--main-bg-color);
+    animation: slide-in-left 400ms ease-in-out;
+    animation-fill-mode: both;
+}
+
+#banner {
+    height: 23rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    width: 110%;
+    left: 50%;
+    transform: translate(-50%);
+    overflow: hidden;
+    /*
+    animation: test 700ms ease-in-out 1s;
+    animation-fill-mode: both;
+    */
+}
+
+@keyframes move-background {
+    0% {height: 23rem}
+    100% {height: 50%}
+}
+
+.action-menu {
+    height: 50%;
+    width: 70%;
+    background-color: var(--main-button-color);
+    border-radius: 0.5rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+.action-menu .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--dark-secondary-button-color);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    height: 2rem;
+    border-radius: 5rem;
+    width: 2rem;
+    cursor: pointer;
+    transition: all 200ms ease-out;
+    overflow: hidden;
+}
+
+.action-menu .close-button:hover {
+    width: 5rem;
+}
+
+.action-menu .close-button:hover::after {
+    content: "Close";
+
+}
+
+.action-menu .close-button i {
+    line-height: 1rem;
+    width: 1rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+.action-menu .close-button:hover i {
+    display: none;
+}
+
+
+#banner > .bg {
+    background-image: url('/images/resources/banner.jpg');
+    background-repeat:repeat-x;
+    background-size: cover;
+    background-position: bottom;
+    height: 100%;
+    width: 100%;
+    filter: blur(2rem);
+
+}
+
+@keyframes slide-in-left {
+    0%{transform: translateX(-10rem); opacity: 0;}
+    100%{transform: translateX(0); opacity: 1;}
+}
+
+
+.main-page-menu-button, #side-bar .close-sidebar-button {
+    background-color: transparent;
+    border: none;
+    margin-left: 1rem;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+}
+
+#side-bar .close-sidebar-button {
+    margin-left: 0;
+    margin-top: 1rem;
+}
+
+.main-page-menu-button i, #side-bar .close-sidebar-button i {
+    font-size: 2rem;
+}
+
+#side-bar {
     position: absolute;
     top: 0;
     left: 0;
-    height: 4rem;
+    z-index: 1000;
+    height: 100%;
+    width: 20%;
+    min-width: 27rem;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: var(--secondary-button-color);
+    transform: translate(-100%);
+    transition: transform 300ms ease-out;
+    -webkit-box-shadow: -5px 0px 47px 3px rgba(0,0,0,0.75);
+    -moz-box-shadow: -5px 0px 47px 3px rgba(0,0,0,0.75);
+    box-shadow: -5px 0px 47px 3px rgba(0,0,0,0.75);
+}
+
+#dark-shade-modal {
+    position:absolute;
+    height: 100%;
     width: 100%;
-    background-color: red;
+    background-color: rgb(0,0,0,0.5);
+    left: 0;
+    top: 0;
+    display: none;
+    z-index: 998;
+    animation: fade-in 200ms ease-out;
+}
+
+
+#info-container-modal {
+    height: 100%;
+    width: 60%;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 999;
+    display: none;
+}
+
+#info-container-modal .test {
+    height: 10rem;
+    width: 30%;
+    min-width: 15rem;
+    border-radius: 0.5rem;
+    background-color: var(--secondary-button-color);
+    display: inline-block;
+    float: right;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    line-height: 10rem;
+    text-align: center;
+    color: var(--title-color);
+}
+
+#info-container-modal .test:nth-of-type(1) {
+    animation: fade-in 300ms ease-out 0.1s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(2) {
+    animation: fade-in 300ms ease-out 0.2s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(3) {
+    animation: fade-in 300ms ease-out 0.3s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(4) {
+    animation: fade-in 300ms ease-out 0.4s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(5) {
+    animation: fade-in 300ms ease-out 0.5s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(6) {
+    animation: fade-in 300ms ease-out 0.6s;
+    animation-fill-mode: both;
+}
+
+#info-container-modal .test:nth-of-type(7) {
+    animation: fade-in 300ms ease-out 0.7s;
+    animation-fill-mode: both;
+}
+
+#side-bar button:not(.close-sidebar-button):not(.download-program) {
+    height: 3rem;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    color: var(--paragraph-color);
+    line-height: 1.3rem;
+    text-align: left;
+    font-size: 1.3rem;
+    transition: padding-left 100ms ease-out;
+    box-sizing: border-box;
+}
+
+#side-bar button:not(.close-sidebar-button):not(.download-program) span:not(:first-of-type) {
+    opacity: 0.8;
+    font-size: 1rem;
+}
+
+#side-bar button:not(.close-sidebar-button):not(.download-program):hover {
+    padding-left: 1rem;
+}
+
+#side-bar button:not(.download-program) span {
+    height: 3rem;
+    line-height: 3rem;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+#side-bar .download-program {
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+    left: 0;
+    width: 100%;
+    height: 4rem;
+    opacity: 0.8;
+    background-color: var(--dark-secondary-button-color);
+    color: var(--title-color);
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    border: none;
+    font-family: bahnschrift;
+    font-weight: lighter;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 0.9rem 0.9rem 0 0;
+}
+
+#side-bar .download-program span {
+    height: 100%;
+    transition: 200ms all ease-out;
+}
+
+#side-bar .download-program i {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    transition: 200ms transform ease-out;
+}
+
+#side-bar .download-program:hover i {
+    transform: translate(-50%, 100%);
+}
+
+#side-bar .download-program:hover span {
+    opacity: 0;
+}
+
+#side-bar .download-program:hover {
+
+}
+
+#title {
+    margin-top: 1rem;
+    font-size: 3rem;
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+#user-container {
+    padding: 1rem;
+    height: fit-content;
+    width: fit-content;
+    box-sizing: border-box;
+    margin-top: 3rem;
+    background-color: transparent;
+}
+
+#user-container .pfp-container {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 100%;
+    margin-bottom: 1rem;
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    transition: 70ms transform ease-out;
+}
+
+#user-container .pfp-container:hover {
+    transform: scale(0.9);
+}
+
+.info-box {
+    pointer-events: none;
+    height: fit-content;
+    max-height: 5rem;
+    padding: 0.8rem 1rem;
+    font-weight: lighter;
+    width: fit-content;
+    background-color: var(--secondary-button-color);
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -130%);
+    opacity: 0;
+    color: white;
+    border-radius: 0.25rem;
+    z-index: 1000;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.info-box::before {
+    pointer-events: none;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: "";
+    transform: translate(-50%, 100%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--secondary-button-color);
+    z-index: 3;
+}
+
+div:hover > .info-box, button:hover > .info-box {
+    animation: fade-in 300ms ease-out 1s;
+    animation-fill-mode: both;
+    
+}
+
+#user-container .pfp-container:hover img {
+    transform: scale(1);
+}
+
+#user-container .pfp-container img.pfp {
+    height: 100%;
+    width: auto;
+    border-radius: 100%;
+    transition: transform 100ms ease-out;
+}
+
+#user-container h1 {
+    font-weight: lighter;
+    margin: 0;
+    background-color: var(--main-bg-color);
+    height: fit-content;
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+#action-buttons {
+    height: fit-content;
+    width: 100%;
+    padding: 1rem;
+    overflow: auto;
+}
+#action-buttons button {
+    background-color: var(--secondary-button-color);
+    height: 6rem;
+    width: 14rem;
+    border-radius: 0.5rem;
+    border: none;
+    transition: 100ms transform ease-out; 
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    color: var(--title-color);
+    font-family: bahnschrift;
+    font-size: 1.8rem;
+    font-weight: lighter;
+    position: relative;
+}
+
+#action-buttons button:hover {
+    transform: translateY(-0.5rem) scale(1.05);
+}
+
+#action-buttons button:not(:first-of-type) {
+    margin-left: 1rem;
+}
+
+button#sign-out {
+    position: relative;
+    float: left;
+    background-color: var(--secondary-button-color);
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.25rem;
+    color: white;
+    font-family: bahnschrift;
+    font-weight: lighter;
+    font-size: 1.2rem;
+    transition: 100ms transform ease-out;
+    cursor: pointer;
+    display: inline-block;
+}
+
+button#sign-out:hover {
+    transform: translate(0,-0.5rem);
+}
+
+button#sign-out:active {
+    transform: translate(0,0.1rem);
+}
+
+#bottom-bar {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+#bottom-bar p {
+    display: inline-block;
+    opacity: 0.5;
+    font-weight: lighter;
+    vertical-align: top;
+    margin: 0.7rem 0;
+    margin-left: 1rem;
 }
