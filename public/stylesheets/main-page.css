@@ -56,6 +56,11 @@ body {
     display: none;
 }
 
+@keyframes pop-actions-in {
+    0%{transform: translate(-50%, -50%) scale(0.5); opacity: 0;}
+    100% {transform: translate(-50%, -50%) scale(1); opacity: 1;}
+}
+
 .action-menu .close-button {
     position: absolute;
     top: 1rem;
@@ -313,6 +318,7 @@ body {
     box-sizing: border-box;
     margin-top: 3rem;
     background-color: transparent;
+    transition: opacity 300ms ease-in-out;
 }
 
 #user-container .pfp-container {
@@ -395,6 +401,7 @@ div:hover > .info-box, button:hover > .info-box {
     width: 100%;
     padding: 1rem;
     overflow: auto;
+    transition: opacity 300ms ease-in-out 0.1s;
 }
 #action-buttons button {
     background-color: var(--secondary-button-color);

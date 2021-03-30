@@ -38,9 +38,76 @@ function toggleSidebar() {
 }
 
 function openProjectMenu() {
-    var el = document.getElementById("projects");
+    var menu = displayActionBlock("projects");
+    if(!menu.new) return;
+
+    var t = document.createElement("h1");
+    t.innerHTML = "Open project from server";
+    t.style = `
+        height: fit-content;
+        margin: 0;
+        font-weight: lighter;
+    `
+    menu.appendChild(t);
+}
+
+
+function openLiveMenu() {
+    var menu = displayActionBlock("live");
+    if(!menu.new) return;
+
+    var t = document.createElement("h1");
+    t.innerHTML = "Open live slideshow";
+    t.style = `
+        height: fit-content;
+        margin: 0;
+        font-weight: lighter;
+    `
+    menu.appendChild(t);
+}
+
+function previewShows() {
+    var menu = displayActionBlock("preview");
+
+    console.log(menu.new)
+
+    if(!menu.new) return;
+    var t = document.createElement("h1");
+    t.innerHTML = "Preview a slideshow";
+
+    t.style = `
+        height: fit-content;
+        margin: 0;
+        font-weight: lighter;
+    `
+    menu.appendChild(t);
+}
+
+function userOptions() {
+    var menu = displayActionBlock("options");
+
+    console.log(menu.new)
+
+    if(!menu.new) return;
+    var t = document.createElement("h1");
+    t.innerHTML = "User options";
+
+    t.style = `
+        height: fit-content;
+        margin: 0;
+        font-weight: lighter;
+    `
+    menu.appendChild(t);
+}
+
+
+
+function displayActionBlock(id) {
+    var el = document.getElementById(id);
+    if(!el) return new Error("Could not find the element"); //Error handling
+
     el.style.display = "block";
-    el.style.animation = "fade-in 200ms ease-in-out";
+    el.style.animation = "pop-actions-in 350ms cubic-bezier(0.42, 0, 0.07, 1.43)";
     
     toggleBg();
 
@@ -55,14 +122,6 @@ function openProjectMenu() {
         `;
         cont.className = "content";
 
-        var t = document.createElement("h1");
-        t.innerHTML = "Open project from server";
-        t.style = `
-            height: fit-content;
-            margin: 0;
-            font-weight: lighter;
-        `
-        cont.appendChild(t);
         el.appendChild(cont);
 
         var close = document.createElement("button");
@@ -79,11 +138,16 @@ function openProjectMenu() {
             var menu = e.target.closest(".action-menu");
             menu.style.display = "none";
             toggleBg();
-        })
+        });
+
+        cont.new = true;
+        return cont;
     } else {
-        console.log("CONTENT FOUND")
+        el.querySelector(".content").new = false;
+        return el.querySelector(".content");
     }
 }
+
 
 
 
@@ -109,22 +173,24 @@ function toggleBg() {
 
         //Move the banner
         var bann = document.getElementById("banner");
-        bann.style.animation = "move-background 400ms ease-in-out";
+        bann.style.animation = "move-background 400ms cubic-bezier(0.42, 0, 0.15, 1.5)";
         bann.style.animationFillMode = "both";
     } else {
         //Get the action buttons
         var butts = document.getElementById("action-buttons");
-        butts.style.opacity = "1";
-                
+        
         var usr = document.getElementById("user-container");
-        usr.style.opacity = "1";
         document.getElementById("banner").displaying = false;
-
+        
+        
+        butts.style.display = "block";
+        usr.style.display = "block";
 
         setTimeout(()=>{
-            butts.style.display = "block";
-            usr.style.display = "block";
-        }, 300);
+            usr.style.opacity = "1";
+            butts.style.opacity = "1";
+        }, 100);
+
 
         //Move the banner
         var bann = document.getElementById("banner");
