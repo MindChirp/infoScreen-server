@@ -32,6 +32,33 @@ body, html {
 box-shadow: 0px 7px 25px -6px rgba(0,0,0,0.75);
 }
 
+#sign-in-cont .top {
+    height: 20rem;
+    width: 40%;
+}
+
+#sign-in-cont .bottom {
+    margin-top: 1rem;
+    height: fit-content;
+    width:100%;
+}
+
+#sign-in-cont .bottom #register-cont {
+    height: 4rem;
+    width: 100%;
+    background-color: var(--secondary-color);
+    border-radius: 0.5rem;
+}
+
+#sign-in-cont .bottom #register-cont p {
+   height: 100%;
+   width: 100%;
+   line-height: 4rem;
+   text-align: center;
+   font-weight: lighter;
+   cursor: pointer; 
+}
+
 
 #sign-in-cont form {
     position: absolute;

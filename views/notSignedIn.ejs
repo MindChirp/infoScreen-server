@@ -18,18 +18,25 @@
         <img id="top-right-infographic" src="/images/resources/bg.jpg">
 
         <div id="sign-in-cont" class="smooth-shadow">
-            <img class="icon" src="/images/resources/icon.png">
-
-            <form class="submission-form">
-                <p>Email</p>
-                <input type="text" autocomplete="email">
-
-                <p>Password</p>
-                <input type="password" autocomplete="current-password">
-
-                <button class="sign-in smooth-shadow" onclick="signIn(event, this)">Sign in</button>
-                <button class="forgot-password" onclick="forgotPass(event)">Forgot Password</button>
-            </form>
+            <div class="top">
+                <img class="icon" src="/images/resources/icon.png">
+    
+                <form class="submission-form">
+                    <p>Email</p>
+                    <input type="text" autocomplete="email">
+    
+                    <p>Password</p>
+                    <input type="password" autocomplete="current-password">
+    
+                    <button class="sign-in smooth-shadow" onclick="signIn(event, this)">Sign in</button>
+                    <button class="forgot-password" onclick="forgotPass(event)">Forgot Password</button>
+                </form>
+            </div>
+            <div class="bottom">
+                <div id="register-cont">
+                    <p onclick="registerNew()">Register a new account</p>
+                </div>
+            </div>
         </div>        
         
         <div id="bottom-bar">
