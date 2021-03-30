@@ -7,6 +7,7 @@ const useragent = require("express-useragent");
 
 const { Pool, Client } = require("pg");
 var pool;
+console.log(process.env.HEROKU);
 if(!process.env.HEROKU) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
