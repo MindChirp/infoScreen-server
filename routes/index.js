@@ -8,21 +8,21 @@ const useragent = require("express-useragent");
 const { Pool, Client } = require("pg");
 var pool;
 console.log(process.env.HEROKU);
-if(!process.env.HEROKU) {
+/*if(!process.env.HEROKU) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     user: 'postgres',
     password: '8Frikkfrikkern8',
     database: 'postgres'
-  })
-} else {
+  })*/
+//} else {
   pool = new Pool({
    connectionString: process.env.DATABASE_URL,
    ssl: {
      rejectUnauthorized: false
    }
  })
-}
+//}
 
 pool.on("error", (err, client) => {
   console.log("Unexpected error ", err);
