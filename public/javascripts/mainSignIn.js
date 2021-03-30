@@ -34,3 +34,11 @@ function signIn(e, el) {
         }
     }
 }
+
+
+
+function forgotPass(e) {
+    e.preventDefault();
+
+    alert("Too bad.")
+}

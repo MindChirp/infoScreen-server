@@ -57,12 +57,21 @@ box-shadow: 0px 7px 25px -6px rgba(0,0,0,0.75);
     transition: all 200ms ease-out;
 } 
 
+
 #sign-in-cont form button:hover {
     transform: translateY(-0.2rem);
 }
 
 #sign-in-cont form button:active {
     transform: translateY(0.1rem);
+}
+
+#sign-in-cont form button.forgot-password {
+    background: none; 
+    border: none;
+    display: inline-block;
+    opacity: 0.6;
+    margin-left: 0rem;
 }
 
 #sign-in-cont form input {
