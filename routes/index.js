@@ -4,16 +4,17 @@ const mysql = require('mysql');
 const session = require("express-session");
 const multiparty = require("multiparty");
 const useragent = require("express-useragent");
-const production = true;
+const production = false;
 const { Pool, Client } = require("pg");
 var pool;
-console.log(process.env.HEROKU);
-if(!production) {
+
+if(process.env.DEVELOPERMODE) {
   pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    user: 'postgres',
-    password: '8Frikkfrikkern8',
-    database: 'postgres'
+    host: 'localhost',
+    user: process.env.USERD,
+    password: process.env.PASSWORDD,
+    database: process.env.DATABASED,
+    port: process.env.PORTD
   })
 } else {
   pool = new Pool({
@@ -64,7 +65,7 @@ router.get('/', function(req, res, next) {
   }
 
 router.get('/signOut', (req, res) => {
-  if(!req.session.loggedin) res.send("NO.");
+  if(!req.session.loggedin) {res.redirect("/")}
 
   req.session.loggedin = false;
   res.redirect("/");
@@ -102,12 +103,15 @@ router.post("/register", async(req, res) => {
 
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query("INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);", (err, resu) => {
+      
+      //"INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);" LEGACY
+      client.query("INSERT INTO users (name, email, date, subscriber, password, dev) VALUES('" + user + "', '" + email + "', '" + today + "', true, crypt('" + pass + "', gen_salt('bf')), false);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
+          console.log(resu);
           if(resu.rows.length == 0) {
             res.send(["OK"]);
           } else {
@@ -181,7 +185,7 @@ router.post("/auth", async (req, res) => {
         console.log(err);
         return;
       }
-      client.query("SELECT * FROM users WHERE email='" + user + "' AND password='" + pass + "';", (err, resu) => {
+      client.query("SELECT * FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)

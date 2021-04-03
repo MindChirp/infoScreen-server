@@ -39,6 +39,25 @@ body {
     */
 }
 
+#user-stats {
+    padding: 1rem;
+    width: 50%;
+    height: fit-content;
+    max-height: 20rem;
+    margin: 1rem 0 0 1rem;
+    border-radius: 0.5rem;
+}
+
+#user-stats p:first-of-type {
+    font-size: 2rem;
+    margin: 0 0 1rem 0;
+}
+
+#user-stats p:not(:first-of-type) {
+    font-weight: lighter;
+    opacity: 0.5;
+}
+
 @keyframes move-background {
     0% {height: 23rem}
     100% {height: 50%}
@@ -527,7 +546,7 @@ button#sign-out:active {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    padding: 0.5rem;
     box-sizing: border-box;
 }
 

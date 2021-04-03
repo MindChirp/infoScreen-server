@@ -50,6 +50,10 @@
                 <span class="material-icons">feedback</span><span>Send Feedback</span>
             </button>
 
+            <button onclick="openFullPage(this)" name="applyOrg">
+                <div class="info-box smooth-shadow">Apply for organisation</div>
+                <span class="material-icons">check</span><span>Apply for organisation</span>
+            </button>
 
             <button class="download-program" onclick="window.location.href='http://github.com/MindChirp/infoScreen/releases';">
                 <span>Install the InfoScreen program</span><i class="material-icons">get_app</i></button>
@@ -68,7 +72,7 @@
             -->
         </div>
         
-        <div id="user-container">
+        <div id="user-container" name="hideable">
             <div class="pfp-container smooth-shadow">
                 <div class="info-box smooth-shadow">Profile picture</div>
                 <img class="pfp" src="/images/resources/default.png">
@@ -76,7 +80,7 @@
             <h1 id="welcome-text" class="smooth-shadow">Loading</h1>
         </div>
 
-        <div id="action-buttons">
+        <div id="action-buttons" name="hideable">
             <button class="smooth-shadow" onclick="openProjectMenu()">Open</button>
             <button class="smooth-shadow" onclick="openLiveMenu()">Live Edit</button>
             <button class="smooth-shadow" onclick="previewShows()">Preview</button>
@@ -87,6 +91,11 @@
         <div class="action-menu smooth-shadow" id="live"></div>
         <div class="action-menu smooth-shadow" id="preview"></div>
         <div class="action-menu smooth-shadow" id="options"></div>
+
+        <div id="user-stats" name="hideable">
+            <p>User statistics</p>
+            <p>Once you join an organisation, your contributions will be shown here.</p>
+        </div>
 
         <div id="bottom-bar">
             <p>Developed by Frikk O. Larsen</p>

@@ -193,19 +193,18 @@ function toggleBg() {
     var disp = document.getElementById("banner").displaying;
     if(!disp) {
 
-        //Get the action buttons
-        var butts = document.getElementById("action-buttons");
-        butts.style.opacity = "0";
+        //Get the els to hide
+        var els = document.getElementsByName("hideable");
+        var x;
 
-        
-        var usr = document.getElementById("user-container");
-        usr.style.opacity = "0";
+        for(x of els) {
+            x.style.opacity = "0";
+            setTimeout(()=>{
+                x.style.display = "none";
+            }, 300)
+        }
+
         document.getElementById("banner").displaying = true;
-
-        setTimeout(()=>{
-            butts.style.display = "none";
-            usr.style.display = "none";
-        }, 300);
 
         //Move the banner
         var bann = document.getElementById("banner");
@@ -213,19 +212,20 @@ function toggleBg() {
         bann.style.animationFillMode = "both";
     } else {
         //Get the action buttons
-        var butts = document.getElementById("action-buttons");
-        
-        var usr = document.getElementById("user-container");
-        document.getElementById("banner").displaying = false;
-        
-        
-        butts.style.display = "block";
-        usr.style.display = "block";
+        var els = document.getElementsByName("hideable");
+        console.log(els)
+        var y;
 
+        for(y of els) {
+            y.style.display = "block";
+        }
         setTimeout(()=>{
-            usr.style.opacity = "1";
-            butts.style.opacity = "1";
-        }, 100);
+            var x;
+            for(x of els) {
+                x.style.opacity = "1";
+            }
+        }, 300);
+        document.getElementById("banner").displaying = false;
 
 
         //Move the banner
@@ -292,7 +292,7 @@ function org(menu) {
         margin: auto;
     `;
     h1.className = "smooth-shadow";
-    h1.innerHTML = email + "<span style='opacity: 0.5; color: var(--paragraph-color); font-family: bahnschrift; font-size: 1.5rem;'>#0001</span>";
+    h1.innerHTML = email + "<span style='opacity: 0.5; color: var(--paragraph-color); font-family: bahnschrift; font-size: 1.5rem;'>#0001</span>"; //This is going to be the default prefix for now
 
 
     var cont = document.createElement("div");
@@ -318,10 +318,30 @@ function org(menu) {
 
 
 function priv(menu) {
+    var p = document.createElement("p");
+    p.innerHTML = "In the early stages of this development path, there won't be any focus on password encryption, or on data transaction safety.";
 
+    menu.appendChild(p);
+
+    var p = document.createElement("p");
+    p.innerHTML = "There is no privacy policy yet, so I only ask you kindly to not abuse the program in any way, and to play fair. I am also not liable for any damages that may occur from using this product. Any faults or bugs that leads to an unconvenient situation is on your shoulders."
+    menu.appendChild(p);
 }
 
 function feedback(menu) {
 
 }
 
+function applyOrg(menu) {
+    var h1 = document.createElement("h1");
+    h1.innerHTML = "Apply for organisation status";
+    h1.style = `
+        margin-top: 0;
+        font-size: 3rem;
+        background-color: var(--dark-secondary-button-color);
+        width: fit-content;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+    `
+    menu.appendChild(h1);
+}
