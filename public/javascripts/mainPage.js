@@ -42,13 +42,22 @@ function openProjectMenu() {
     if(!menu.new) return;
 
     var t = document.createElement("h1");
-    t.innerHTML = "Open project from server";
+    t.innerHTML = "Open project";
     t.style = `
-        height: fit-content;
         margin: 0;
         font-weight: lighter;
-    `
-    menu.appendChild(t);
+    `;
+
+    var side = document.createElement("div");
+    side.className = "side-bar";
+    
+    var tCont = document.createElement("div");
+    tCont.className = "title-container";
+    tCont.appendChild(t);
+
+    side.appendChild(tCont);
+
+    menu.appendChild(side);
 }
 
 
@@ -63,7 +72,16 @@ function openLiveMenu() {
         margin: 0;
         font-weight: lighter;
     `
-    menu.appendChild(t);
+    var side = document.createElement("div");
+    side.className = "side-bar";
+    
+    var tCont = document.createElement("div");
+    tCont.className = "title-container";
+    tCont.appendChild(t);
+
+    side.appendChild(tCont);
+    
+    menu.appendChild(side);
 }
 
 function previewShows() {
@@ -80,7 +98,16 @@ function previewShows() {
         margin: 0;
         font-weight: lighter;
     `
-    menu.appendChild(t);
+    var side = document.createElement("div");
+    side.className = "side-bar";
+    
+    var tCont = document.createElement("div");
+    tCont.className = "title-container";
+    tCont.appendChild(t);
+
+    side.appendChild(tCont);
+    
+    menu.appendChild(side); 
 }
 
 function userOptions() {
@@ -97,7 +124,16 @@ function userOptions() {
         margin: 0;
         font-weight: lighter;
     `
-    menu.appendChild(t);
+    var side = document.createElement("div");
+    side.className = "side-bar";
+    
+    var tCont = document.createElement("div");
+    tCont.className = "title-container";
+    tCont.appendChild(t);
+
+    side.appendChild(tCont);
+    
+    menu.appendChild(side);
 }
 
 
@@ -209,3 +245,83 @@ function toggleBg() {
         }, 400)
     }
 }
+
+function openFullPage(el) {
+    //Create the fullpage menu
+    var men = document.createElement("div");
+    men.id = "fullpage-menu";
+
+    setTimeout(()=>{
+        document.body.appendChild(men);
+    }, 250)
+    
+    //Move the clicked button
+    el.style.animation = "slide-clicked-button 300ms ease-in-out";
+    el.blur();
+
+    //Create close button
+    var close = document.createElement("button");
+    men.appendChild(close);
+    close.className = "close-button smooth-shadow"
+    close.innerHTML = "Close";
+
+    close.addEventListener("click", (e)=>{
+        var parent = e.target.closest("#fullpage-menu");
+        parent.parentNode.removeChild(parent);
+        el.style.animation = "none";
+    });
+
+    //Unselect all buttons
+    document.body.blur();
+
+    //Run the function
+
+    window[el.getAttribute("name")](men);
+
+}
+
+function org(menu) {
+    var email = JSON.parse(localStorage.getItem("userInfo"))[1][0].email;
+    
+    var h1 = document.createElement("h1");
+    h1.style = `
+        background-color: var(--dark-secondary-button-color);
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        width: fit-content;
+        margin: auto;
+    `;
+    h1.className = "smooth-shadow";
+    h1.innerHTML = email + "<span style='opacity: 0.5; color: var(--paragraph-color); font-family: bahnschrift; font-size: 1.5rem;'>#0001</span>";
+
+
+    var cont = document.createElement("div");
+    cont.style = `
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+    `;  
+    cont.appendChild(h1);
+
+    var sub = document.createElement("p");
+    sub.innerHTML = "You do not belong to any organisation. You can however join one by using your email and code above. <br>When you are assigned to an organisation, options will be shown here.";
+    sub.style = `
+        font-weight: lighter;
+        text-align: center;
+        width: 100%;
+    `
+    cont.appendChild(sub);
+
+    menu.appendChild(cont);
+}
+
+
+function priv(menu) {
+
+}
+
+function feedback(menu) {
+
+}
+
