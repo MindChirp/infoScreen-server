@@ -281,8 +281,10 @@ function openFullPage(el) {
 }
 
 function org(menu) {
-    var email = JSON.parse(localStorage.getItem("userInfo"))[1][0].email;
-    
+    var dat = JSON.parse(localStorage.getItem("userInfo"))
+    var email = dat[1][0].email;
+    var id = dat[1][0].id;
+
     var h1 = document.createElement("h1");
     h1.style = `
         background-color: var(--dark-secondary-button-color);
@@ -292,7 +294,7 @@ function org(menu) {
         margin: auto;
     `;
     h1.className = "smooth-shadow";
-    h1.innerHTML = email + "<span style='opacity: 0.5; color: var(--paragraph-color); font-family: bahnschrift; font-size: 1.5rem;'>#0001</span>"; //This is going to be the default prefix for now
+    h1.innerHTML = email + "<span style='opacity: 0.5; color: var(--paragraph-color); font-family: bahnschrift; font-size: 1.5rem;'>#" + id + "</span>"; //This is going to be the default prefix for now
 
 
     var cont = document.createElement("div");

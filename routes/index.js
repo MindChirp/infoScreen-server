@@ -34,7 +34,6 @@ pool.on("error", (err, client) => {
 
 
 router.get('/main', function(req, res, next) {
-  console.log(req.session);
   if(!req.session.loggedin) {
     res.redirect("/");
     return;
@@ -185,15 +184,13 @@ router.post("/auth", async (req, res) => {
         console.log(err);
         return;
       }
-      client.query("SELECT * FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
+      client.query("SELECT name, email, dev, subscriber, date, organisation, id FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
-          res.send(["ERROR", err]);
+          res.status(1).send({message: err});
         } else {
-          console.log(resu.rows);
           if(resu.rows[0]) {
-            console.log("SETTING STATE TO LOGGED IN")
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
             res.send(["OK", resu.rows]);
