@@ -17,10 +17,24 @@ body {
     width: 100%;    
     font-family: bahnschrift;
     /*font-family: Product Sans;*/
-    overflow-x: hidden;
     background-color: var(--main-bg-color);
+    overflow-y: hidden;
+    overflow-x: hidden;
+    animation: fade-in 300ms ease-in-out;
+}
+
+#main-page-wrapper {
+    height: 100%;
+    width: 100%;
     animation: slide-in-left 400ms ease-in-out;
     animation-fill-mode: both;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    position: absolute;
+    padding-top: 2rem;
+    box-sizing: border-box;
+    left: 0;
+    top: 0;
 }
 
 #banner {
@@ -29,7 +43,7 @@ body {
     left: 0;
     top: 0;
     z-index: -1;
-    width: 110%;
+    width: 100%;
     left: 50%;
     transform: translate(-50%);
     overflow: hidden;
@@ -37,6 +51,9 @@ body {
     animation: test 700ms ease-in-out 1s;
     animation-fill-mode: both;
     */
+    border-radius: 0 0 0.5rem 0.5rem; /*Should this be a feature?*/
+    overflow: hidden;
+
 }
 
 #user-stats {
@@ -83,6 +100,28 @@ body {
     font-weight: lighter;
 }
 
+#fullpage-menu .title:first-of-type {
+    margin-top: 1rem;
+    font-size: 3rem;
+    background-color: var(--dark-secondary-button-color);
+    width: fit-content;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    position: relative;
+    overflow: hidden;
+}
+#fullpage-menu .title:first-of-type::after {
+    content: ".";
+    color: transparent;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    width: 100%;
+    position:absolute;
+    bottom: 0;
+    height: 0.2rem;
+    left: 0;
+}
+
 #fullpage-menu .close-button {
     height: 2rem;
     background-color: var(--dark-secondary-button-color);
@@ -108,7 +147,7 @@ body {
 }
 
 .action-menu {
-    height: 50%;
+    height: 70%;
     width: 70%;
     background-color: var(--main-button-color);
     border-radius: 0.5rem;
@@ -188,14 +227,50 @@ body {
 
 
 #banner > .bg {
+
+    /*
     background-image: url('/images/resources/banner.jpg');
     background-repeat:repeat-x;
     background-size: cover;
     background-position: bottom;
+    */
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
     height: 100%;
     width: 100%;
-    filter: blur(2rem);
+    animation-fill-mode: both;
+    transition: all 1s ease-in-out;
+    overflow: hidden;
+}
 
+#banner > .bg:not(.invisible)::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 1;
+    z-index: 2;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    transition: all 1s ease-in-out;
+    content:".";
+    color: transparent;
+    animation: fade-in 1s ease-in-out 1s backwards;
+}
+
+#banner > .bg.invisible::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    opacity: 0;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    transition: all 1s ease-in-out;
+    content:".";
 }
 
 @keyframes slide-in-left {
@@ -364,7 +439,6 @@ body {
     font-weight: lighter;
     overflow: hidden;
     cursor: pointer;
-    border-radius: 0.9rem 0.9rem 0 0;
 }
 
 #side-bar .download-program span {
@@ -557,4 +631,45 @@ button#sign-out:active {
     vertical-align: top;
     margin: 0.7rem 0;
     margin-left: 1rem;
+}
+
+
+.username-and-id {
+    background-color: var(--dark-secondary-button-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    width: fit-content;
+    margin: auto;
+    transition: 200ms transform cubic-bezier(0.42, 0, 0.15, 1.8);
+    cursor: pointer;
+}
+.username-and-id:hover {
+    transform: rotate(3deg) scale(1.1);
+}
+
+.username-and-id:active {
+    transform: rotate(2deg) scale(0.99);
+}
+
+.submit-feedback-button {
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    transform: translate(0, 100%);
+    background-color: var(--secondary-button-color);
+    border: none;
+    border-radius: 10rem;
+    color: var(--title-color);
+    padding: 0.5rem 1rem;
+    text-transform: uppercase;
+    transition: all 300ms ease-in-out;
+    cursor: pointer;
+}
+
+.submit-feedback-button:hover {
+    bottom: 0.5rem;
+}
+
+.submit-feedback-button:active {
+    bottom: -0.1rem;
 }

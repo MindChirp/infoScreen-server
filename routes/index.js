@@ -4,9 +4,16 @@ const mysql = require('mysql');
 const session = require("express-session");
 const multiparty = require("multiparty");
 const useragent = require("express-useragent");
-const production = false;
+const validator = require("email-validator");
+const nodemailer = require("nodemailer");
+const { View } = require("grandjs");
+View.settings.set("views", "../public/emailviews");
+const verifyMail = View.importJsx("verification.jsx");
 const { Pool, Client } = require("pg");
 var pool;
+
+
+
 
 if(process.env.DEVELOPERMODE) {
   pool = new Pool({
@@ -97,6 +104,14 @@ router.post("/register", async(req, res) => {
     var user = fields.user[0];
     var email = fields.email[0];
     var pass = fields.password[0];
+
+    //Validate the email
+    var isEmailValid = validator.validate(email);
+    if(!isEmailValid) {
+      res.status(400).send({message: "Email doesn't exist"});
+      return;
+    }
+
     var date = new Date();
     var today = date.getDate() + "/" + parseInt(date.getMonth()+1) + "/" + date.getFullYear(); 
 
@@ -104,15 +119,15 @@ router.post("/register", async(req, res) => {
       if (err) throw err
       
       //"INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);" LEGACY
-      client.query("INSERT INTO users (name, email, date, subscriber, password, dev) VALUES('" + user + "', '" + email + "', '" + today + "', true, crypt('" + pass + "', gen_salt('bf')), false);", (err, resu) => {
+      client.query("INSERT INTO users (name, email, date, subscriber, password, dev, validated) VALUES('" + user + "', '" + email + "', '" + today + "', true, crypt('" + pass + "', gen_salt('bf')), false, false);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
           res.send(["ERROR", err]);
         } else {
-          console.log(resu);
-          if(resu.rows.length == 0) {
-            res.send(["OK"]);
+          if(resu.rows.length == 0) { 
+            //Start the verification process
+            startVerification(user, email);
           } else {
             res.send(["ERROR", "Wtf, could not create the user"])
           }
@@ -122,7 +137,63 @@ router.post("/register", async(req, res) => {
   })
 })
 
+function startVerification(user, email) {
+  //Add an entry to the validation table
+  pool.connect((err, client, done)=>{
+    if(err) throw err;
+    client.query("INSERT INTO validation (name, email) VALUES ('" + user + "', '" + email + "');", (err, results) => {
+      done();
+      if(err) {res.status(500).send({message: "Could not create registration entry"}); console.log("ouiahsduibs");} else {
+        console.log("ijbasbdjiudsas");
+        
+        //Send a verification email
+        sendVerificationEmail(user, email)
+        
+        return;
+      }
+    })
+  })
+}
 
+
+function sendVerificationEmail(user, email) {
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.MailUsername,
+      pass: process.env.MailPassword
+    }
+  });
+
+  try {
+
+    var theTemplate = View.renderToHtml(verifyMail);
+    var mailOpts = {
+      from: 'kevikensen@gmail.com',
+      to: email,
+      subject: 'Verify Your InfoScreen Account',
+      html: theTemplate,
+      attachments: [{
+        filename: 'icon.png',
+        path: './public/images/resources/icon.png',
+        cid: 'icon-image'
+      }]
+    };
+    
+    transporter.sendMail(mailOpts, (error, info)=>{
+      if(error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    })
+
+  } catch (error) {
+    
+  }
+
+
+}
 
 // Post feedback to database
 router.post("/postFeedBack", async (req, res) => {
@@ -179,21 +250,30 @@ router.post("/auth", async (req, res) => {
     var pass = fields.password[0];
 
     console.log(user, pass);
+  
     pool.connect((err, client, done) => {
       if (err) {
         console.log(err);
         return;
       }
-      client.query("SELECT name, email, dev, subscriber, date, organisation, id FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
+      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
           res.status(1).send({message: err});
+          res.end();
+          return;
         } else {
           if(resu.rows[0]) {
+            
+            //Cancel the sign in if the user is not validated            
+            if(!resu.rows[0].validated) {res.status(403).send({message: 'User not verified. Check email.'}); res.end(); return;}
+            
+
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
             res.send(["OK", resu.rows]);
+            res.end();
           } else {
             req.session.loggedin = false;
             req.session.isDeveloper = 0;

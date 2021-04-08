@@ -20,13 +20,15 @@ function signIn(e, el) {
     xhr.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200) {
             var res = JSON.parse(this.responseText);
-            document.body.style.animation = "slide-out-right 400ms ease-in-out"
-            document.body.style.animationFillMode = "both"
+            document.getElementById("main-content-wrapper").style.animation = "slide-out-right 400ms ease-in-out"
+            document.getElementById("main-content-wrapper").style.animationFillMode = "both"
+            document.getElementById("background-gradient").style.animation = "fade-out 300ms ease-in-out 300ms both";
             localStorage.setItem("userInfo", JSON.stringify(res));
             setTimeout(()=>{
                 window.location.href = "/main";
             }, 500)
         } else if(this.readyState == 4 && this.status != 200) {
+            console.log(this.responseText)
             var res = JSON.parse(this.responseText);
             alert(res.message);
             //window.location.href = "/main";
@@ -92,7 +94,7 @@ function registerNew() {
     subm.className = "sign-in smooth-shadow";
     subm.innerHTML = "Regiser account";
     subm.addEventListener("click", (e)=>{
-        createAccount(e, email.value, name.value, pass.value, pass1.value);
+        createAccount(e, email.value.toLowerCase(), name.value.toLowerCase(), pass.value, pass1.value);
     })
     reg.appendChild(subm);
 

@@ -18,88 +18,84 @@
     </head>
     <body>
         <div id="top-bar">
-            
+
         </div>
 
-        
-        <button class="main-page-menu-button" onclick="toggleSidebar()"><i class="material-icons">menu</i></button>
-        <div id="banner">
+        <div id="banner" class="smooth-shadow">
             <div class="bg"></div>
         </div>
-        <div id="side-bar">
-            <button class="close-sidebar-button" onclick="toggleSidebar()"><i class="material-icons">close</i></button>
-            <h1 id="title">InfoScreen <span style="opacity: 0.6; font-size: 1rem; font-weight: lighter; text-decoration: underline;">Web Edition 0.0.1</span></h1>
-            <button onclick="signOut()">
-                <div class="info-box smooth-shadow">Signs out</div>
-                <span class="material-icons">logout</span><span>Sign out</span>
-            </button>
-
-            
-            <button onclick="openFullPage(this)" name="org">
-                <div class="info-box smooth-shadow">Organisation settings</div>
-                <span class="material-icons">corporate_fare</span><span>Organisation</span>
-            </button>
-
-            <button onclick="openFullPage(this)" name="priv">
-                <div class="info-box smooth-shadow">Privacy and Terms of service</div>
-                <span class="material-icons">privacy_tip</span><span>Privacy & TOS</span>
-            </button>
-
-            <button onclick="openFullPage(this)" name="feedback">
-                <div class="info-box smooth-shadow">Send feedback</div>
-                <span class="material-icons">feedback</span><span>Send Feedback</span>
-            </button>
-
-            <button onclick="openFullPage(this)" name="applyOrg">
-                <div class="info-box smooth-shadow">Apply for organisation</div>
-                <span class="material-icons">check</span><span>Apply for organisation</span>
-            </button>
-
-            <button class="download-program" onclick="window.location.href='http://github.com/MindChirp/infoScreen/releases';">
-                <span>Install the InfoScreen program</span><i class="material-icons">get_app</i></button>
-        </div>
-
-        <div id="dark-shade-modal"></div>
-        <div id="info-container-modal">
-            <!--
-            <div class="test smooth-shadow">A</div>
-            <div class="test smooth-shadow">B</div>
-            <div class="test smooth-shadow">C</div>
-            <div class="test smooth-shadow">D</div>
-            <div class="test smooth-shadow">E</div>
-            <div class="test smooth-shadow">F</div>
-            <div class="test smooth-shadow">G</div>
-            -->
-        </div>
-        
-        <div id="user-container" name="hideable">
-            <div class="pfp-container smooth-shadow">
-                <div class="info-box smooth-shadow">Profile picture</div>
-                <img class="pfp" src="/images/resources/default.png">
+        <div id="main-page-wrapper">
+            <button class="main-page-menu-button" onclick="toggleSidebar()"><i class="material-icons">menu</i></button>
+            <div id="side-bar">
+                <div class="content">
+                    <button class="close-sidebar-button" onclick="toggleSidebar()"><i class="material-icons">close</i></button>
+                    <h1 id="title">InfoScreen <span style="opacity: 0.6; font-size: 1rem; font-weight: lighter; text-decoration: underline;">Web Edition 0.0.1</span></h1>
+                    <button onclick="signOut()">
+                        <div class="info-box smooth-shadow">Signs out</div>
+                        <span class="material-icons">logout</span><span>Sign out</span>
+                    </button>
+                    
+                    <button onclick="openFullPage(this)" name="priv">
+                        <div class="info-box smooth-shadow">Privacy and Terms of service</div>
+                        <span class="material-icons">privacy_tip</span><span>Privacy & TOS</span>
+                    </button>
+                    
+                    <button onclick="openFullPage(this)" name="feedback">
+                        <div class="info-box smooth-shadow">Send feedback</div>
+                        <span class="material-icons">feedback</span><span>Send Feedback</span>
+                    </button>
+                    
+                    <button class="download-program" onclick="window.location.href='http://github.com/MindChirp/infoScreen/releases';">
+                        <span>Install the InfoScreen program</span><i class="material-icons">get_app</i></button>
+                        
+                    <div class="gradient" style="position: absolute; width: 100%; height: 0.3rem; bottom: 0; left: 0;"></div>
+                </div>
             </div>
-            <h1 id="welcome-text" class="smooth-shadow">Loading</h1>
+
+            <div id="dark-shade-modal"></div>
+            <div id="info-container-modal">
+                <!--
+                <div class="test smooth-shadow">A</div>
+                <div class="test smooth-shadow">B</div>
+                <div class="test smooth-shadow">C</div>
+                <div class="test smooth-shadow">D</div>
+                <div class="test smooth-shadow">E</div>
+                <div class="test smooth-shadow">F</div>
+                <div class="test smooth-shadow">G</div>
+                -->
+            </div>
+            
+            <div id="user-container" name="hideable">
+                <div class="pfp-container smooth-shadow">
+                    <div class="info-box smooth-shadow">Profile picture</div>
+                    <img class="pfp" src="/images/resources/default.png">
+                </div>
+                <h1 id="welcome-text" class="smooth-shadow">Loading</h1>
+            </div>
+
+            <div id="action-buttons" name="hideable">
+                <button class="smooth-shadow" onclick="openProjectMenu()">Open</button>
+                <button class="smooth-shadow" onclick="openLiveMenu()">Live Edit</button>
+                <button class="smooth-shadow" onclick="previewShows()">Preview</button>
+                <button class="smooth-shadow" onclick="userOptions()">User Options</button>
+            </div>
+
+            <div class="action-menu smooth-shadow" id="projects"></div>
+            <div class="action-menu smooth-shadow" id="live"></div>
+            <div class="action-menu smooth-shadow" id="preview"></div>
+            <div class="action-menu smooth-shadow" id="options"></div>
+
+            <div id="user-stats" name="hideable">
+                <p>User statistics</p>
+                <p>Once you join an organisation, your contributions will be shown here.</p>
+            </div>
+
+            <div id="bottom-bar">
+                <p>Developed by Frikk O. Larsen</p>
+            </div>
+
         </div>
 
-        <div id="action-buttons" name="hideable">
-            <button class="smooth-shadow" onclick="openProjectMenu()">Open</button>
-            <button class="smooth-shadow" onclick="openLiveMenu()">Live Edit</button>
-            <button class="smooth-shadow" onclick="previewShows()">Preview</button>
-            <button class="smooth-shadow" onclick="userOptions()">User Options</button>
-        </div>
-
-        <div class="action-menu smooth-shadow" id="projects"></div>
-        <div class="action-menu smooth-shadow" id="live"></div>
-        <div class="action-menu smooth-shadow" id="preview"></div>
-        <div class="action-menu smooth-shadow" id="options"></div>
-
-        <div id="user-stats" name="hideable">
-            <p>User statistics</p>
-            <p>Once you join an organisation, your contributions will be shown here.</p>
-        </div>
-
-        <div id="bottom-bar">
-            <p>Developed by Frikk O. Larsen</p>
-        </div>
 
         <script src="/javascripts/mainPage.js" async defer></script>
     </body>
