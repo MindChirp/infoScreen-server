@@ -6,13 +6,26 @@ const multiparty = require("multiparty");
 const useragent = require("express-useragent");
 const validator = require("email-validator");
 const nodemailer = require("nodemailer");
+const multer = require("multer");
+const upload = multer();
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, 'public/images/uploadedImages/organisations');
+  },
+
+  // By default, multer removes file extensions so let's add them back
+  filename: function(req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
 const { View } = require("grandjs");
+
 View.settings.set("views", "../public/emailviews");
 const verifyMail = View.importJsx("verification.jsx");
 const { Pool, Client } = require("pg");
 var pool;
-
-
 
 
 if(process.env.DEVELOPERMODE) {
@@ -64,29 +77,29 @@ router.get('/', function(req, res, next) {
     res.locals.title = "Your Browser is Not Supported";
     res.locals.body = "Try using Chrome, Edge, Opera, or something else.";
     res.render("notSupported");
+    return;
   } else if(ua.isMobile) {
     res.locals.title = "Mobile Devices aren't Supported Yet"
     res.locals.body = "Try using a desktop device instead.";
     res.render("notSupported")
+    return;
   }
-
-router.get('/signOut', (req, res) => {
-  if(!req.session.loggedin) {res.redirect("/")}
-
-  req.session.loggedin = false;
-  res.redirect("/");
-})
-
-  
-
   if(!req.session.loggedin) {
     res.locals.signedIn = false;
     res.render("notSignedIn");
 
-    res.send("USER NOT SIGNED IN");
+    return;
   } 
   res.redirect("/main");
+
 });
+
+router.get('/signOut', (req, res) => {
+  if(!req.session.loggedin) {res.redirect("/"); return;}
+
+  req.session.loggedin = false;
+  res.redirect("/");
+})
 
 
 
@@ -191,8 +204,6 @@ function sendVerificationEmail(user, email) {
   } catch (error) {
     
   }
-
-
 }
 
 // Post feedback to database
@@ -205,14 +216,15 @@ router.post("/postFeedBack", async (req, res) => {
       res.end();
       throw err;
     }
-
+    console.log(files);
     var subj = fields.subject[0];
     var email = fields.email[0];
     var body = fields.body[0];
+    console.log(email)
 
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query("INSERT INTO feedback VALUES('" + subj + "', '" + email + "', '" + body + "');", (err, resu) => {
+      client.query("INSERT INTO feedback (subject, email, body) VALUES('" + subj + "', '" + email + "', '" + body + "');", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -231,10 +243,77 @@ router.post("/postFeedBack", async (req, res) => {
 
 
 
+router.post('/applyOrg', (req, res)=>{
 
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(500).send(err);
+      throw err;
+    }
+    var name = fields.name[0];
+    var body = fields.desc[0];
+    
+    pool.connect((err, client, done) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      client.query("", (err, resu) => {
+        done()
+        if (err) {
+          console.log(err.stack)
+          res.status(1).send({message: err});
+          res.end();
+          return;
+        } else {
+          if(resu.rows[0]) {
+            
+            //Cancel the sign in if the user is not validated            
+            if(!resu.rows[0].validated) {res.status(403).send({message: 'User not verified. Check email.'}); res.end(); return;}
+            
+
+            req.session.loggedin = true;
+            req.session.isDeveloper = resu.rows[0].developer;
+            req.session.admin = resu.rows[0].admin;
+            res.send(["OK", resu.rows]);
+            res.end();
+          } else {
+            req.session.loggedin = false;
+            req.session.isDeveloper = 0;
+            res.status(403).send({
+              message: 'Access denied!'
+            });
+          }
+        }
+      })
+    })
+
+  })
+
+});
+
+router.post("/org/upload/pfp", function(req, res) {
+  if(req.session.loggedin && req.session.admin) {
+    var data = new multiparty.Form({uploadDir:'../public/images/uploadedImages'});
+    data.parse(req, function(err, fields, files) {
+      if(err) throw err;
+      var count = Object.keys(files).length;
+      var namesArr = [];
+
+      console.log(count);
+
+      res.send(namesArr);
+    });
+  } else {
+    res.end();
+  }
+
+}); 
 
 /* Receive login data */
 router.post("/auth", async (req, res) => {
+
   if(req.session.loggedin) {
     res.send(["USER ALREADY SIGNED IN"]);
     return;
@@ -256,7 +335,7 @@ router.post("/auth", async (req, res) => {
         console.log(err);
         return;
       }
-      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
+      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated, admin FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -272,6 +351,7 @@ router.post("/auth", async (req, res) => {
 
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
+            req.session.admin = resu.rows[0].admin;
             res.send(["OK", resu.rows]);
             res.end();
           } else {
@@ -324,28 +404,5 @@ router.get('/feedBackLogs', async function(req, res) {
 });
 
 
-/*
-
-THIS IS LEGACY CODE FROM ANOTHER PROJECT. HOWEVER, IT MIGHT BE USED TO STORE PROFILE PICTURES AND SO ON..
-
-router.post("/bilder/upload", function(req, res) {
-  if(req.session.loggedin && req.session.admin) {
-    var data = new multiparty.Form({uploadDir:'../public/images/uploadedImages'});
-    data.parse(req, function(err, fields, files) {
-      if(err) throw err;
-      var count = Object.keys(files).length;
-      var namesArr = [];
-
-      console.log(count);
-
-      res.send(namesArr);
-    });
-  } else {
-    res.end();
-  }
-
-}); 
-
-*/
 
 module.exports = router;

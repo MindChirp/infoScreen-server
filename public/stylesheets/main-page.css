@@ -92,23 +92,33 @@ body {
     animation-fill-mode: both;
     padding: 1rem;
     box-sizing: border-box;
-    overflow: hidden;
     transform: translate(-100%);
+    overflow-y: hidden;
 }
 
 #fullpage-menu h1 {
     font-weight: lighter;
 }
 
+#fullpage-menu > .gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0.3rem;
+    z-index: 10;
+}
+
 #fullpage-menu .title:first-of-type {
     margin-top: 1rem;
-    font-size: 3rem;
+    font-size: 2.3rem;
     background-color: var(--dark-secondary-button-color);
     width: fit-content;
     border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 1rem 1.5rem;
     position: relative;
     overflow: hidden;
+    margin-bottom: 2rem;
 }
 #fullpage-menu .title:first-of-type::after {
     content: ".";
@@ -130,7 +140,7 @@ body {
     color: var(--title-color);
     border-radius: 10rem;
     border: none;
-
+    z-index: 1000;
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -403,6 +413,7 @@ body {
     font-size: 1.3rem;
     transition: padding-left 100ms ease-out;
     box-sizing: border-box;
+    padding: 0rem 0rem 0rem 0.5rem;
 }
 
 #side-bar button:not(.close-sidebar-button):not(.download-program) span:not(:first-of-type) {
@@ -417,7 +428,7 @@ body {
 #side-bar button:not(.download-program) span {
     height: 3rem;
     line-height: 3rem;
-    vertical-align: bottom;
+    vertical-align: top;
     display: inline-block;
     margin-right: 0.5rem;
 }
@@ -580,10 +591,31 @@ div:hover > .info-box, button:hover > .info-box {
     font-size: 1.8rem;
     font-weight: lighter;
     position: relative;
+    overflow: hidden;
+}
+
+#action-buttons button:disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+#action-buttons button:disabled::after {
+    content:".";
+    color: transparent;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
 }
 
 #action-buttons button:hover {
     transform: translateY(-0.5rem) scale(1.05);
+}
+
+#action-buttons button:disabled:hover {
+    transform: none;
 }
 
 #action-buttons button:not(:first-of-type) {
@@ -672,4 +704,286 @@ button#sign-out:active {
 
 .submit-feedback-button:active {
     bottom: -0.1rem;
+}
+
+
+.element-message {
+    background-color: var(--dark-secondary-button-color);
+    height: fit-content;
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    z-index: 1000;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    animation: fade-in 300ms ease-out backwards;
+    transform: translate(-50%, 100%);
+    transition: all 300ms ease-out;
+}
+
+.element-message:hover {
+    opacity: 0.6;
+}
+
+.element-message::before {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: "";
+    transform: translate(-50%, -100%) rotate(180deg);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--dark-secondary-button-color);
+    z-index: 3;
+}
+
+.element-message p {
+    margin: 0;
+    text-align: center;
+    color: var(--title-color);
+    font-size: 1rem;
+    font-weight: lighter;
+    line-height: 1.5rem;
+}
+
+.apply-for-org > .main-wrapper {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.apply-for-org .image-selector-container {
+    height: fit-content;
+    min-height: 20rem;
+    width: 20rem;
+    position: relative;
+    display: inline-block;
+}
+
+
+
+.apply-for-org > .main-wrapper > .wrapper {
+    padding: 1rem 1rem 1rem 2rem;
+}
+
+.apply-for-org > .main-wrapper > .wrapper form {
+    margin-bottom: 5rem;
+}
+
+.apply-for-org > .main-wrapper > .wrapper form label {
+    margin-top: 2rem;
+    position: relative;
+}
+
+.apply-for-org .image-section {
+    height: fit-content;
+    min-width: 22rem;
+    max-width: fit-content;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: var(--dark-secondary-button-color);
+    z-index: -2;
+    border-radius: 0.5rem;
+}
+
+.apply-for-org .image-section .image-information {
+    display: inline-block;
+    padding: 1rem;
+    vertical-align: top;
+    box-sizing: border-box;
+    width: 10rem;
+    height: 20rem;
+    position: relative;
+    margin-left: 1rem;
+}
+
+.apply-for-org .image-section .image-information > .wrapper {
+    height: 20rem;
+    position: absolute;
+    width: 7rem;
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+    max-width: 7rem;
+
+}
+
+.apply-for-org .image-section .image-information > .wrapper p {
+    color: var(--title-color);
+    margin: 0;
+    font-weight: lighter;
+    opacity: 0.5;
+    position: absolute;
+    top: 50%;
+    width: 8rem;
+    text-align: center;
+    transform: translate(0,-50%);
+}
+/*
+.apply-for-org .image-section .image-information::after {
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 0.2rem;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    content: ".";
+    color: transparent;
+    position: absolute;
+}
+*/
+
+
+.apply-for-org > .main-wrapper > .wrapper .image-section .ratio-warning {
+    padding: 1rem;
+    animation: fade-in 250ms ease-out;
+    background-color: var(--dark-secondary-button-color);
+    border-radius: 0.5rem;
+    max-width: 10rem;
+    height: 20rem;
+    margin: 0 0 0 1rem;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: inline-table;
+    vertical-align: top;
+    
+}
+
+.apply-for-org > .main-wrapper > .wrapper .image-section .ratio-warning::after {
+    content: ".";
+    color: transparent;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    width: 0.2rem;
+    position:absolute;
+    top: 0;
+    height: 100%;
+    left: 0;
+}
+
+.apply-for-org > .main-wrapper > .wrapper .image-section .ratio-warning p {
+    margin: 0;
+    font-weight: lighter;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.apply-for-org .image-selector {
+    height: 20rem;
+    width: 20rem;
+    border-radius: 0.5rem;
+    background-color: var(--main-button-color);
+    position: relative;
+    display: inline-block;
+    float: left;
+    overflow: hidden;
+    transition: all 250ms ease-out;
+    z-index: 3;
+}
+
+.apply-for-org .image-selector-container::after {
+    height: 100%;
+    width: 100%;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%) scale(1.02);
+    border-radius: 0.5rem;
+    content: ".";
+    color: transparent;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+    z-index: 1;
+    transition: all 250ms ease-out;
+}
+
+.apply-for-org .image-selector p.error {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-weight: lighter;
+    font-size: 0.8rem;
+}
+
+.apply-for-org .image-selector .org-image {
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.apply-for-org .image-selector-container:hover > .image-selector, .image-selector-container:hover::after {
+    border-radius: 100%;
+}
+
+.apply-for-org .image-selector .upload-label {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: var(--dark-secondary-button-color);
+    padding: 0.5rem 1rem;
+    border-radius: 10rem;
+    border: none;
+    cursor: pointer;
+    color: var(--title-color);
+    transition: all 300ms ease-out;
+    user-select: none;
+    z-index: 3;
+}
+
+.apply-for-org .apply-button {
+    background-color: var(--dark-secondary-button-color);
+    padding: 0.5rem 1rem;
+    border-radius: 10rem;
+    border: none;
+    cursor: pointer;
+    color: var(--title-color);
+    transition: all 300ms ease-out;
+    user-select: none;
+    display: block;
+    clear: left;
+    font-size: 1.3rem;
+    text-transform: capitalize;
+    font-family: bahnschrift;
+    letter-spacing: 0.05em;
+    margin: 1rem 0 0 1rem;
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    font-weight: lighter;
+    z-index: 10;
+}
+
+.apply-for-org .apply-button:hover {
+    transform: translate(-50%, -0.5rem);
+}
+
+.apply-for-org .apply-button:active {
+    transform: translate(-50%, 0.2rem);
+}
+
+.apply-for-org p.sub-title {
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+    font-weight: lighter;
+}
+
+.apply-for-org .image-selector .upload-label:hover {
+    transform: translate(-50%, -0.5rem);
+}
+
+.apply-for-org .image-selector .upload-label:active {
+    transform: translate(-50%, 0.2rem);
 }

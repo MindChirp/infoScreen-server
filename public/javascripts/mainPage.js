@@ -1,3 +1,22 @@
+function toggleSidebar() {
+    var sideBar = document.getElementById("side-bar");
+    var shade = document.getElementById("dark-shade-modal");
+    var infoB = document.getElementById("info-container-modal");
+
+    if(!sideBar.displaying) {
+        sideBar.displaying = true;
+        sideBar.style.transform = "translate(0)";
+        shade.style.display = "initial";
+        infoB.style.display = "initial";
+    } else {
+        sideBar.displaying = false;
+        sideBar.style.transform = "translate(-100%)";
+        shade.style.display = "none";
+        infoB.style.display = "none";
+
+    }
+}
+
 var FDButtons = function(){
     this.activateInput = (inp) => {
         //Get the input tag
@@ -7,11 +26,11 @@ var FDButtons = function(){
         el.addEventListener("blur", (e)=>{
             if(e.target.value.trim().length > 0) {
                 //Don't let the label fall back down
-                el.nextSibling.style = `transform: translate(-1rem,-1.6rem); font-size: 1rem; line-height: 1.5rem; height: 1.5rem; opacity: 1;`; 
+                el.nextSibling.nextSibling.style = `transform: translate(-0.8rem,-1.6rem); font-size: 1rem; line-height: 1.5rem; height: 1.5rem; opacity: 1;`; 
                 return;
             }
 
-            el.nextSibling.style = ``;
+            el.nextSibling.nextSibling.style = ``;
         })
 
     },
@@ -29,7 +48,12 @@ var FDButtons = function(){
         if(title) {
             sp.innerHTML = title + '';
         }
+
+        var indicator = document.createElement("div");
+        indicator.className = "fd-text-input__indicator";
+
         lab.appendChild(inp);
+        lab.appendChild(indicator);
         lab.appendChild(sp);
 
         return lab;
@@ -76,24 +100,7 @@ function capitalizeTheFirstLetterOfEachWord(words) {
     return separateWord.join(' ');
  }
 
-function toggleSidebar() {
-    var sideBar = document.getElementById("side-bar");
-    var shade = document.getElementById("dark-shade-modal");
-    var infoB = document.getElementById("info-container-modal");
 
-    if(!sideBar.displaying) {
-        sideBar.displaying = true;
-        sideBar.style.transform = "translate(0)";
-        shade.style.display = "initial";
-        infoB.style.display = "initial";
-    } else {
-        sideBar.displaying = false;
-        sideBar.style.transform = "translate(-100%)";
-        shade.style.display = "none";
-        infoB.style.display = "none";
-
-    }
-}
 
 function openProjectMenu() {
     var menu = displayActionBlock("projects");
@@ -347,13 +354,6 @@ function openFullPage(el) {
     //Create bottom gradient bar
     var grad = document.createElement("div");
     grad.className = "gradient";
-    grad.style = `
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 0.3rem;
-    `;
     men.appendChild(grad);
 
     //Unselect all buttons
@@ -414,41 +414,15 @@ function priv(menu) {
     menu.appendChild(p);
 
     var p = document.createElement("p");
-    p.innerHTML = `Website Terms and Conditions of Use
-    1. Terms
-    By accessing this Website, accessible from https://shrouded-wave-54128.herokuapp.com/, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws. If you disagree with any of these terms, you are prohibited from accessing this site. The materials contained in this Website are protected by copyright and trade mark law.
-    
-    2. Use License
-    Permission is granted to temporarily download one copy of the materials on Infoscreen's Website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-    
-    modify or copy the materials;
-    use the materials for any commercial purpose or for any public display;
-    attempt to reverse engineer any software contained on Infoscreen's Website;
-    remove any copyright or other proprietary notations from the materials; or
-    transferring the materials to another person or "mirror" the materials on any other server.
-    This will let Infoscreen to terminate upon violations of any of these restrictions. Upon termination, your viewing right will also be terminated and you should destroy any downloaded materials in your possession whether it is printed or electronic format. These Terms of Service has been created with the help of the Terms Of Service Generator and the Privacy Policy Generator.
-    
-    3. Disclaimer
-    All the materials on Infoscreen’s Website are provided "as is". Infoscreen makes no warranties, may it be expressed or implied, therefore negates all other warranties. Furthermore, Infoscreen does not make any representations concerning the accuracy or reliability of the use of the materials on its Website or otherwise relating to such materials or any sites linked to this Website.
-    
-    4. Limitations
-    Infoscreen or its suppliers will not be hold accountable for any damages that will arise with the use or inability to use the materials on Infoscreen’s Website, even if Infoscreen or an authorize representative of this Website has been notified, orally or written, of the possibility of such damage. Some jurisdiction does not allow limitations on implied warranties or limitations of liability for incidental damages, these limitations may not apply to you.
-    
-    5. Revisions and Errata
-    The materials appearing on Infoscreen’s Website may include technical, typographical, or photographic errors. Infoscreen will not promise that any of the materials in this Website are accurate, complete, or current. Infoscreen may change the materials contained on its Website at any time without notice. Infoscreen does not make any commitment to update the materials.
-    
-    6. Links
-    Infoscreen has not reviewed all of the sites linked to its Website and is not responsible for the contents of any such linked site. The presence of any link does not imply endorsement by Infoscreen of the site. The use of any linked website is at the user’s own risk.
-    
-    7. Site Terms of Use Modifications
-    Infoscreen may revise these Terms of Use for its Website at any time without prior notice. By using this Website, you are agreeing to be bound by the current version of these Terms and Conditions of Use.
-    
-    8. Your Privacy
-    Please read our Privacy Policy.
-    
-    9. Governing Law
-    Any claim related to Infoscreen's Website shall be governed by the laws of no without regards to its conflict of law provisions.`;
-
+    //require the TOS module
+    try {
+        console.log(Terms);
+        p.innerHTML = Terms;
+    } catch (error) {
+        console.log(error);
+        p.innerHTML = "Could not load the full legal document.";
+        p.className = "paragraph-warning";
+    }
     menu.appendChild(p);
 }
 
@@ -474,12 +448,15 @@ function feedback(menu) {
     wr.style = `
         display: block;
     `
+    title.setAttribute("name", "title");
     wr.appendChild(title);
     left.appendChild(wr);
 
     FDButts.activateInput(title);
 
     var email = FDButts.textInput('Email');
+    email.setAttribute("name", "email");
+
     var wr = document.createElement("div");
     wr.style = `
         margin-top: 2rem;
@@ -538,27 +515,37 @@ function feedback(menu) {
         
     });
 
-    const serverAddress = 'https://shrouded-wave-54128.herokuapp.com';
-
-
     subm.addEventListener("click", (e)=>{
         //Send the server request
         var xhr = new XMLHttpRequest();
-        console.log(serverAddress);
-        xhr.open("POST", serverAddress + "/postFeedBack");
+        xhr.open("POST", "/postFeedBack");
         
         var par = e.target.closest("#fullpage-menu").querySelector(".left");
         var subject = par.getElementsByTagName("input")[0].value;
         var email = par.getElementsByTagName("input")[1].value;
-        var letter = e.target.closest(".right").getElementsByTagName("textarea")[0].value;
+        var isEmailValid = validateEmail(email);
+        if(!isEmailValid) {
+            //The email is not formatted correctly. The database won't accept it either way, so lets just block it at this stage.
+            var emailEl = document.getElementsByName("email")[0];
+            showElementMessage(emailEl, "Email is not formatted correctly");
 
+            return;
+        }
+
+        if(subject.trim().length < 5) {
+            var titleEl = document.getElementsByName("title")[0];
+            showElementMessage(titleEl, "Please enter a valid title");
+            return;
+        }
+        var letter = e.target.closest(".right").getElementsByTagName("textarea")[0].value;
+        console.log(subject, email, letter)
         if(subject.trim().length == 0 || email.trim().length == 0 || letter.trim().length == 0) {return}
 
         var formData = new FormData();
-        formData.append("subject", subject.value);
-        formData.append("email", email.value);
-        formData.append("body", letter.value);
-        
+        formData.append("subject", subject);
+        formData.append("email", email);
+        formData.append("body", letter);
+
         xhr.send(formData);
         xhr.onreadystatechange = async function() {
             if(this.readyState == 4 && this.status == 200) {
@@ -590,13 +577,246 @@ function feedback(menu) {
 }
 
 
+function showElementMessage(el, message) {
+    //Check if element is in the DOM
+    if(!el instanceof HTMLElement) {return new Error("The element is not part of the DOM")}
+
+    //To show the message at the center, the element should be either position: absolute; or position: relative;
+    
+    var msg = document.createElement("div");
+    msg.className = "element-message smooth-shadow";
+
+    el.appendChild(msg);
+
+    //Text
+    var p = document.createElement("p");
+    p.innerHTML = message + ''; //Force it to be a string
+
+    msg.appendChild(p);
+
+    //Kill the element after some time
+
+    setTimeout(()=>{
+        msg.parentNode.removeChild(msg);
+    }, 5000);
+
+    return msg;
+}
+
+        
+function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
 
 
 function applyOrg(menu) {
+    var mainWrapper = document.createElement("div");
+    mainWrapper.className = "main-wrapper";
+    menu.appendChild(mainWrapper);
+
     var h1 = document.createElement("h1");
     h1.innerHTML = "Apply to Create an Organisation";
     h1.className = "title";
-    menu.appendChild(h1);
+    mainWrapper.appendChild(h1);
+    menu.classList.add("apply-for-org");
+
+    var wrapper = document.createElement("div");
+    wrapper.className = "wrapper";
+    mainWrapper.appendChild(wrapper);
+
+    var form = document.createElement("form");
+    form.className = "form";
+    form.setAttribute("autocomplete", "off");
+
+    wrapper.appendChild(form);
+
+    var title = FDButts.textInput('Organisation name');
+    form.appendChild(title);
+    FDButts.activateInput(title);
+    title.classList.add("name");
+
+    var desc = FDButts.textInput('Description');
+    form.appendChild(desc);
+    desc.setAttribute("autocomplete", "off")
+    desc.childNodes[0].style.width = "20rem";
+    desc.childNodes[0].setAttribute("autocomplete", "off");
+    FDButts.activateInput(desc);
+    desc.classList.add("description");
+
+    var pass = FDButts.textInput('Master password');
+    pass.setAttribute("autocomplete", "new-field-password")
+    form.appendChild(pass);
+    pass.childNodes[0].style.width = "20rem";
+    pass.childNodes[0].type = "password";
+    pass.childNodes[0].setAttribute("autocomplete", "off");
+    FDButts.activateInput(pass);
+    pass.classList.add("password");
+
+    //Create information dropdown for the master password input
+    var info = document.createElement("div");
+    var p = document.createElement("p");
+    p.innerHTML = "The master password should only be known to the administrator";
+    info.appendChild(p);
+    pass.appendChild(info);
+    info.className = "information";
+
+
+    var p = document.createElement("p");
+    p.innerHTML = "Organisation image";
+    p.className = "sub-title";
+    wrapper.appendChild(p);
+
+    var imageSection = document.createElement("div");
+    imageSection.className = "image-section";
+    wrapper.appendChild(imageSection);
+
+    var imgCont = document.createElement("div");
+    imgCont.className = "image-selector-container";
+    imageSection.appendChild(imgCont);
+
+    var img = document.createElement("div");
+    img.className = "image-selector smooth-shadow";
+    imgCont.appendChild(img);
+
+    var selImg = document.createElement("input");
+    selImg.type = "file";
+    selImg.accept = "image/*"
+    selImg.id = "upload-photo";
+    selImg.style.display = "none";
+
+    var label = document.createElement("label");
+    label.setAttribute("for", "upload-photo")
+    label.className = "upload-label smooth-shadow";
+    img.appendChild(label);
+    label.innerHTML = "Select an Image"
+
+    var image = document.createElement("img");
+    image.className = "org-image";
+    image.src = "/images/resources/icon.png";
+    img.appendChild(image);
+
+    img.appendChild(selImg);
+
+
+    selImg.addEventListener("change", async function(){
+        if(this.files && this.files[0]) {
+            var appendSrc = async function(src){
+                return new Promise((resolve, reject)=>{
+
+                    var image = img.querySelector(".org-image");
+
+                    image.src = URL.createObjectURL(src);
+                    image.onload = ()=>{resolve()}
+                    image.onerror = ()=>{reject()}
+                })
+            }
+
+
+            //Check if there is an error message
+            if(img.querySelector(".error")) {
+                console.log(img.querySelector(".error"));
+                var el = img.querySelector(".error");
+                el.parentNode.removeChild(el);
+
+                var image = document.createElement("img");
+                image.className = "org-image";
+                img.appendChild(image);
+            }
+
+            try {
+                await appendSrc(this.files[0]);
+            } catch (error) {
+                if(img.getElementsByTagName("img")[0]) {
+                    var el = img.getElementsByTagName("img")[0];
+                    el.parentNode.removeChild(el);
+                }
+                var p = document.createElement("p");
+                p.className = "error";
+                p.innerHTML = "Could not load the image"
+                img.appendChild(p);
+            }
+
+            var image = img.querySelector(".org-image");
+
+            var imgStyle = window.getComputedStyle(image);
+            var h = image.naturalHeight;
+            var w = image.naturalWidth;
+            var margins = 0.1;
+
+
+
+            if(h/w > 1 + margins || h/w < 1 - margins) {
+                //Show the ratio warning
+                if(imageSection.querySelector(".ratio-warning")) {imageSection.querySelector(".ratio-warning").parentNode.removeChild(imageSection.querySelector(".ratio-warning"))}
+                var el = document.createElement("div");
+                el.className = "ratio-warning smooth-shadow";
+
+                var msg = document.createElement("p");
+                msg.innerHTML = "Your current resolution (" + w + "x" + h +") might scale differently across the platform. It is recommended to use a squared image.";
+                el.appendChild(msg);
+
+                imageSection.appendChild(el);
+            } else {
+                if(imageSection.querySelector(".ratio-warning")) {imageSection.querySelector(".ratio-warning").parentNode.removeChild(imageSection.querySelector(".ratio-warning"))}
+            }
+        }
+    });
+
+
+
+    var imgInfo = document.createElement("div");
+    imgInfo.className = "image-information";
+
+    var wr = document.createElement("div");
+    wr.className = "wrapper";
+
+    var p = document.createElement("p");
+    p.innerHTML = "The organisation image will be used to give users an idea of what organisation this is. It should typically be a logo, or a concept that represents what the organisation does.";
+
+    wr.appendChild(p);
+    imgInfo.appendChild(wr);
+
+
+    imageSection.appendChild(imgInfo);
+
+    var informationSection = document.createElement("div");
+
+
+    var apply = document.createElement("button");
+    apply.className = "apply-button smooth-shadow";
+
+    apply.innerHTML = "Apply for organisation";
+
+    mainWrapper.appendChild(apply);
+
+    apply.addEventListener("click", (e)=>{
+        //Gather the information, send it to the server
+        var name = menu.querySelector(".name").getElementsByTagName("input")[0];
+        var desc = menu.querySelector(".description").getElementsByTagName("input")[0];
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/applyOrg");
+        console.log(name.value)
+        var formData = new FormData();
+        formData.append("name", name.value);
+        formData.append("desc", desc.value);
+
+        xhr.send(formData);
+        xhr.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+
+                //Send profile image
+                var imageDat
+                uploadOrgPfp()
+                console.log(this.responseText);
+            } else if(this.readyState == 4 && this.status != 200) {
+                console.log("ERROR");
+                console.log(this.responseText);
+            }
+        }
+
+    });
 }
 
 function createSidebarButton(title, icon, name, hover) {
