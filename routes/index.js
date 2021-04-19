@@ -140,7 +140,8 @@ router.post("/register", async(req, res) => {
         } else {
           if(resu.rows.length == 0) { 
             //Start the verification process
-            startVerification(user, email);
+            var res = startVerification(user, email);
+            console.log(res);
           } else {
             res.send(["ERROR", "Wtf, could not create the user"])
           }
@@ -156,8 +157,7 @@ function startVerification(user, email) {
     if(err) throw err;
     client.query("INSERT INTO validation (name, email) VALUES ('" + user + "', '" + email + "');", (err, results) => {
       done();
-      if(err) {res.status(500).send({message: "Could not create registration entry"}); console.log("ouiahsduibs");} else {
-        console.log("ijbasbdjiudsas");
+      if(err) {return err} else {
         
         //Send a verification email
         sendVerificationEmail(user, email)
