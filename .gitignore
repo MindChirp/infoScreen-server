@@ -1,4 +1,4 @@
 node_modules
 .env
 
-:/public/uploadedImages
+./public/uploadedImages
