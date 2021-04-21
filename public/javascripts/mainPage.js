@@ -68,6 +68,9 @@ function signOut() {
 }
 
 window.onload = ()=>{
+    //Check if user has any organisation requests pending
+    checkOrganisationStatus();
+
     loadUserInfo();
     
     var dat = JSON.parse(localStorage.getItem("userInfo"))[1][0];
@@ -652,6 +655,7 @@ function applyOrg(menu) {
     pass.childNodes[0].setAttribute("autocomplete", "off");
     FDButts.activateInput(pass);
     pass.classList.add("password");
+    pass.classList.add("password");
 
     //Create information dropdown for the master password input
     var info = document.createElement("div");
@@ -681,7 +685,7 @@ function applyOrg(menu) {
 
     var selImg = document.createElement("input");
     selImg.type = "file";
-    selImg.accept = "image/*"
+    selImg.accept = "image/*";
     selImg.id = "upload-photo";
     selImg.style.display = "none";
 
@@ -693,8 +697,15 @@ function applyOrg(menu) {
 
     var image = document.createElement("img");
     image.className = "org-image";
-    image.src = "/images/resources/icon.png";
+    //image.src = "/images/resources/icon.png";
     img.appendChild(image);
+
+    //Show that there is no image selected
+    var noimg = document.createElement("p");
+    noimg.className = "error";
+    noimg.innerHTML = "No image selected";
+    img.appendChild(noimg);
+    noimg.style.fontSize = "1rem";
 
     img.appendChild(selImg);
 
@@ -791,9 +802,42 @@ function applyOrg(menu) {
     mainWrapper.appendChild(apply);
 
     apply.addEventListener("click", (e)=>{
+
+
+
+
         //Gather the information, send it to the server
         var name = menu.querySelector(".name").getElementsByTagName("input")[0];
         var desc = menu.querySelector(".description").getElementsByTagName("input")[0];
+        var pass = menu.querySelector(".password").getElementsByTagName("input")[0];
+
+        var cancelContinue = false;
+        if(name.value.trim().length == 0) {
+            showElementMessage(name.parentNode, "Name the organisation");
+            cancelContinue = true;
+        }
+        
+        if(desc.value.trim().length == 0) {
+            showElementMessage(desc.parentNode, "Enter a description");
+            cancelContinue = true;
+        }
+
+        if(pass.value.trim().length == 0) {
+            showElementMessage(pass.parentNode, "Enter a password");
+            cancelContinue = true;
+        }
+
+        if(imageSection.querySelector("#upload-photo").files.length == 0) {
+            alert("Please select an image");
+            cancelContinue = true;
+        }
+
+        if(cancelContinue) {return}
+
+        //Make the button go spinny spinny
+        var el = e.target;
+        el.innerHTML = "Creating organisation";
+        el.disabled = true;
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/applyOrg");
@@ -801,22 +845,73 @@ function applyOrg(menu) {
         var formData = new FormData();
         formData.append("name", name.value);
         formData.append("desc", desc.value);
-
+        formData.append("pass", pass.value);
         xhr.send(formData);
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = async function() {
             if(this.readyState == 4 && this.status == 200) {
+                
+                
+                var orgId = JSON.parse(this.responseText).id;
+                if(!orgId) {alert("Could not create organisation"); return;}
 
                 //Send profile image
-                var imageDat
-                uploadOrgPfp()
-                console.log(this.responseText);
+                var imageDat = imageSection.querySelector("#upload-photo").files[0];
+                await uploadOrgPfp(imageDat, orgId)
+                .then((value)=>{
+                    //Organisation has been created, inform the user
+                    el.innerHTML = "Organisation has been created";
+
+                    //Change the sidebar
+                    checkOrganisationStatus();
+                })
+                .catch((value)=>{
+                    alert("Could not create the organisation. (" + value + ")");
+                });
             } else if(this.readyState == 4 && this.status != 200) {
-                console.log("ERROR");
-                console.log(this.responseText);
+                if(this.status == 403) {
+                    el.innerHTML = JSON.parse(this.responseText).message;
+                    el.disabled = true;
+                }
             }
         }
 
     });
+}
+
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  }
+
+
+  function debugBase64(base64URL){
+    var win = window.open();
+    win.document.write('<iframe src="' + base64URL  + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+}
+
+
+async function uploadOrgPfp(image, id) {
+    return new Promise(async (resolve, reject) => {
+        var formData = new FormData();
+        formData.append("id", id);
+        
+        var base64 = await getBase64(image);
+
+        //debugBase64(base64) I used this to verify the base data validity
+        
+        formData.append("data", base64);
+        
+        fetch(`/org/upload/pfp`, {
+            method:"POST", 
+            body:formData
+        })
+        .then(response => resolve(response))
+        .catch(error => reject(error));
+    })
 }
 
 function createSidebarButton(title, icon, name, hover) {
@@ -844,5 +939,24 @@ function createSidebarButton(title, icon, name, hover) {
     el.appendChild(lab);
 
     document.getElementById("side-bar").querySelector(".content").appendChild(el);
+
+}
+
+
+function orgInfo(menu) {
+    var data = JSON.parse(localStorage.getItem("orgInfo"));
+
+    var title = document.createElement("h1");
+    title.innerHTML = data.name;
+    title.className = "title";
+    menu.appendChild(title);
+
+    if(data.accepted == false) {
+        loadOrgStatus(menu, data); //Defined in organisationStatusChecker.js
+    } else if(data.accepted == true) {
+        loadOrgPage(menu, data); //Defined in orgPage.js
+        //loadOrgStatus(menu, data);
+
+    }
 
 }

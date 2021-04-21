@@ -8,6 +8,7 @@ const validator = require("email-validator");
 const nodemailer = require("nodemailer");
 const multer = require("multer");
 const upload = multer();
+const fs = require("file-system");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -245,6 +246,11 @@ router.post("/postFeedBack", async (req, res) => {
 
 router.post('/applyOrg', (req, res)=>{
 
+  if(!req.session.loggedin) {res.status(403).send({message:'User not signed in'})};
+  if(req.session.hasOrgRegistered) {
+    res.status(403).send({message: 'You have already registered an organisation'});
+    return;
+  }
   var data = new multiparty.Form();
   data.parse(req, async (err, fields, files) => {
     if (err) {
@@ -253,13 +259,18 @@ router.post('/applyOrg', (req, res)=>{
     }
     var name = fields.name[0];
     var body = fields.desc[0];
+    var pass = fields.pass[0];
+    var email = req.session.email;
+
+    var usrName = req.session.name;
+  
     
     pool.connect((err, client, done) => {
       if (err) {
         console.log(err);
         return;
       }
-      client.query("", (err, resu) => {
+      client.query("INSERT INTO organisations (name, owner, description, password, email) VALUES('" + name + "', '" + usrName + "', '" + body + "', crypt('" + pass + "', gen_salt('bf')), '" + email + "') RETURNING id;", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -267,22 +278,13 @@ router.post('/applyOrg', (req, res)=>{
           res.end();
           return;
         } else {
-          if(resu.rows[0]) {
-            
-            //Cancel the sign in if the user is not validated            
-            if(!resu.rows[0].validated) {res.status(403).send({message: 'User not verified. Check email.'}); res.end(); return;}
-            
+          if(resu.rows[0]) {                 
 
-            req.session.loggedin = true;
-            req.session.isDeveloper = resu.rows[0].developer;
-            req.session.admin = resu.rows[0].admin;
-            res.send(["OK", resu.rows]);
+            res.send({id: resu.rows[0].id});
             res.end();
           } else {
-            req.session.loggedin = false;
-            req.session.isDeveloper = 0;
-            res.status(403).send({
-              message: 'Access denied!'
+            res.status(500).send({
+              message: 'Could not create organisation'
             });
           }
         }
@@ -293,23 +295,72 @@ router.post('/applyOrg', (req, res)=>{
 
 });
 
-router.post("/org/upload/pfp", function(req, res) {
-  if(req.session.loggedin && req.session.admin) {
-    var data = new multiparty.Form({uploadDir:'../public/images/uploadedImages'});
-    data.parse(req, function(err, fields, files) {
-      if(err) throw err;
-      var count = Object.keys(files).length;
-      var namesArr = [];
+router.post("/org/upload/pfp", async function(req, res) {
+  /*if(!req.session.loggedin) {
+    res.status(403).send();
+  }*/
 
-      console.log(count);
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(500).send(err);
+      throw err;
+    }
 
-      res.send(namesArr);
-    });
-  } else {
-    res.end();
-  }
+    var orgId = fields.id[0];
+    var imgData = fields.data[0];
+//    console.log(Buffer.from(buffer, "binary"));
+    await saveImageFromBlob(imgData, "./public/images/uploadedImages/organisations/", orgId)
+    .then((result)=>{
+      req.session.hasOrgRegistered = true;
+      res.status(200).send();
+    })
+    .catch((result) => {
+
+      res.status(500).send({message: result.error});
+    })
+  })
 
 }); 
+
+function decodeBase64Image(dataString) {
+  var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+    response = {};
+
+  if (matches.length !== 3) {
+    return new Error('Invalid input string');
+  }
+
+  response.type = matches[1];
+  response.data = new Buffer(matches[2], 'base64');
+
+  return response;
+}
+
+async function saveImageFromBlob(baseString, path, name) {
+  return new Promise(async(resolve, reject) => {
+
+    var imageBuffer = decodeBase64Image(baseString);
+
+    //Get the image file type
+    var type = baseString.split("/")[1].split(";")[0];
+
+    //Save the image
+    try {
+      fs.writeFile(path + name + "." + type, imageBuffer.data, (err) => {
+        if(err) {
+          console.log(err);
+          reject({status: 'Could not save file', error: err});
+        } else {
+          resolve()
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      reject(error);
+    }
+  })
+}
 
 /* Receive login data */
 router.post("/auth", async (req, res) => {
@@ -352,6 +403,10 @@ router.post("/auth", async (req, res) => {
             req.session.loggedin = true;
             req.session.isDeveloper = resu.rows[0].developer;
             req.session.admin = resu.rows[0].admin;
+            req.session.name = resu.rows[0].name;
+            req.session.id = resu.rows[0].id;
+            req.session.email = resu.rows[0].email;
+
             res.send(["OK", resu.rows]);
             res.end();
           } else {
@@ -402,6 +457,38 @@ router.get('/feedBackLogs', async function(req, res) {
     res.send([msg]);
   }
 });
+
+
+router.get('/organisation/checkStatus', function(req, res) {
+  //Check the status of an organisation
+  if(!req.session.loggedin) {
+    res.status(403).send();
+  }
+
+  var name = req.session.name;
+  var id = req.session.id;
+  var email = req.session.email;
+
+
+  //Fetch organisation status
+  pool.connect((err, client, done) => {
+    if (err) throw err
+    client.query("SELECT name, accepted, id, owner FROM organisations WHERE owner='" + name + "' AND email='" + email + "';", (err, resu) => {
+      done()
+      if (err) {
+        res.status(500).send({message:'Could not load organisation information'})
+      } else {
+        if(resu.rows.length > 0) {
+          res.status(200).send(resu.rows[0]);
+        } else {
+          res.status(204).send({message:'No organisation found'});
+        }
+      }
+    })
+  })
+
+
+})
 
 
 

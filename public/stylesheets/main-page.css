@@ -883,7 +883,7 @@ button#sign-out:active {
     display: inline-block;
     float: left;
     overflow: hidden;
-    transition: all 250ms ease-out;
+    transition: all 300ms ease-in-out;
     z-index: 3;
 }
 
@@ -900,7 +900,7 @@ button#sign-out:active {
     background: rgb(131,58,180);
     background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
     z-index: 1;
-    transition: all 250ms ease-out;
+    transition: all 300ms ease-in-out;
 }
 
 .apply-for-org .image-selector p.error {
@@ -964,6 +964,11 @@ button#sign-out:active {
     z-index: 10;
 }
 
+.apply-for-org .apply-button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 .apply-for-org .apply-button:hover {
     transform: translate(-50%, -0.5rem);
 }
@@ -986,4 +991,49 @@ button#sign-out:active {
 
 .apply-for-org .image-selector .upload-label:active {
     transform: translate(-50%, 0.2rem);
+}
+
+
+
+/*ORGANISATION STATUS PAGE*/
+
+.organisation-status > .wrapper {
+    height: fit-content;
+    padding: 1rem;
+    background-color: var(--dark-secondary-button-color);
+    border-radius: 0.5rem;
+    width: fit-content;
+    min-width: 30%;
+    min-height: 3rem;
+}
+
+
+.organisation-status > .wrapper > p:not(.info) {
+    font-weight: lighter;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    margin: 0.5rem;
+}
+
+.organisation-status > .wrapper > p > span {
+}
+
+.organisation-status > .wrapper > p > span.gray {
+    color: rgb(100,100,100);
+}
+
+.organisation-status > .wrapper > p > span.green {
+    color: rgb(20,150,20);
+}
+
+.organisation-status > .wrapper > p > span.red {
+    color: rgb(150,20,20);
+}
+
+.organisation-status > .wrapper > .info {
+    height: fit-content;
+    background-color: var(--slider-color);
+    border-radius: 0.25rem;
+    padding: 1rem;
+    max-width: 40rem;
 }
