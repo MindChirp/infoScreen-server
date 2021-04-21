@@ -199,3 +199,8 @@ a:not(:last-of-type) {
     0%{transform: translateX(0rem); opacity: 1;}
     100%{transform: translateX(10rem); opacity: 0;}
 }
+
+#register:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}

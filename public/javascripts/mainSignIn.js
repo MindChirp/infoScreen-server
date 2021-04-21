@@ -91,6 +91,7 @@ function registerNew() {
     reg.style.animationFillMode = "both";
 
     var subm = document.createElement("button");
+    subm.id="register";
     subm.className = "sign-in smooth-shadow";
     subm.innerHTML = "Regiser account";
     subm.addEventListener("click", (e)=>{
@@ -125,10 +126,15 @@ function createAccount(event, email, name, pass, pass1) {
 
     xhr.send(formData);
 
+
+    var butt = document.getElementById("register");
+    butt.innerHTML = "Creating user";
+    butt.disabled = true;
+
     xhr.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
             //Request ok!
-            var res = JSON.parse(this.responseText);
+            //var res = JSON.parse(this.responseText);
             location.reload();
 
         } else if(this.readyState == 4 && this.status != 200) {

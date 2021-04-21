@@ -141,8 +141,8 @@ router.post("/register", async(req, res) => {
         } else {
           if(resu.rows.length == 0) { 
             //Start the verification process
-            var res = startVerification(user, email);
-            console.log(res);
+            var response = startVerification(user, email);
+            res.status(200).send();
           } else {
             res.send(["ERROR", "Wtf, could not create the user"])
           }
