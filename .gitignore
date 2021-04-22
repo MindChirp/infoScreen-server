@@ -1,4 +1,6 @@
 node_modules
 .env
 
-public/images/uploadedImages/organisations/
+public/images/uploadedImages/organisations/*
+
+!public/images/uploadedImages/organisations/.gitkeep
