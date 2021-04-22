@@ -34,6 +34,10 @@ function signIn(e, el) {
             console.log(this.responseText)
             var res = JSON.parse(this.responseText);
             alert(res.message);
+
+            var el = document.querySelector("#sign-in-cont > div.top > form > button.sign-in.smooth-shadow")
+            el.disabled = false;
+            el.innerHTML = "Sign in";
             //window.location.href = "/main";
 
         }
@@ -96,9 +100,13 @@ function registerNew() {
     var subm = document.createElement("button");
     subm.id="register";
     subm.className = "sign-in smooth-shadow";
-    subm.innerHTML = "Regiser account";
+    subm.innerHTML = "Register account";
     subm.addEventListener("click", (e)=>{
-        createAccount(e, email.value.toLowerCase(), name.value.toLowerCase(), pass.value, pass1.value);
+        var res = createAccount(e, email.value.toLowerCase(), name.value.toLowerCase(), pass.value, pass1.value);
+        if(res) {
+            var form = document.querySelector("#sign-in-cont > div.top > form");
+            showElementMessage(form, res);
+        }
     })
     reg.appendChild(subm);
 
@@ -116,8 +124,9 @@ function registerNew() {
 function createAccount(event, email, name, pass, pass1) {
     event.preventDefault();
     //Get the credentials
-
-    if(pass!=pass1) return new Error("Passwords do not match");
+    if(email.trim().length == 0) return "Type an email"
+    if(name.trim().length < 5) return "Type your full name"
+    if(pass!=pass1) return "Passwords do not match";
 
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/register");
@@ -143,7 +152,13 @@ function createAccount(event, email, name, pass, pass1) {
         } else if(this.readyState == 4 && this.status != 200) {
             //Error!
             console.log(this.responseText);
-            alert(this.responseText);
+            var form = document.querySelector("#sign-in-cont > div.top > form");
+            showElementMessage(form, JSON.parse(this.responseText).message);
+
+            var button = document.querySelector("#register");
+            button.innerHTML = "Register";
+            button.disabled = false;
+
         }
     }
 }
@@ -162,4 +177,32 @@ function loaderWheel() {
     }
 
     return el;
+}
+
+
+
+function showElementMessage(el, message) {
+    //Check if element is in the DOM
+    if(!el instanceof HTMLElement) {console.log(new Error("The element is not part of the DOM"))}
+
+    //To show the message at the center, the element should be either position: absolute; or position: relative;
+    
+    var msg = document.createElement("div");
+    msg.className = "element-message smooth-shadow";
+
+    el.appendChild(msg);
+
+    //Text
+    var p = document.createElement("p");
+    p.innerHTML = message + ''; //Force it to be a string
+
+    msg.appendChild(p);
+
+    //Kill the element after some time
+
+    setTimeout(()=>{
+        msg.parentNode.removeChild(msg);
+    }, 5000);
+
+    return msg;
 }

@@ -136,6 +136,7 @@ body {
     color: var(--paragraph-color);
     font-size: 1rem;
     font-family: bahnschrift;
+    position: relative;
 }
 
 #sign-in-cont form p {
@@ -208,4 +209,48 @@ a:not(:last-of-type) {
 #register:disabled {
     opacity: 0.5;
     pointer-events: none;
+}
+
+
+.element-message {
+    background-color: var(--dark-secondary-button-color);
+    height: fit-content;
+    width: fit-content;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    z-index: 1000;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    animation: fade-in 300ms ease-out backwards;
+    transform: translate(-50%, 100%);
+    transition: all 300ms ease-out;
+}
+
+.element-message:hover {
+    opacity: 0.6;
+}
+
+.element-message::before {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    content: "";
+    transform: translate(-50%, -100%) rotate(180deg);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--dark-secondary-button-color);
+    z-index: 3;
+}
+
+.element-message p {
+    margin: 0;
+    text-align: center;
+    color: var(--title-color);
+    font-size: 1rem;
+    font-weight: lighter;
+    line-height: 1.5rem;
 }
