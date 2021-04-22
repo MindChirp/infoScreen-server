@@ -4,6 +4,9 @@ function signIn(e, el) {
     //Get the datas
     var parent = el.closest(".submission-form");
 
+    el.innerHTML = "Loading";
+    el.disabled = true;
+
     var email = parent.getElementsByTagName("input")[0].value;
     var pass = parent.getElementsByTagName("input")[1].value;
 
@@ -143,4 +146,20 @@ function createAccount(event, email, name, pass, pass1) {
             alert(this.responseText);
         }
     }
+}
+
+
+
+
+//Loading wheel
+function loaderWheel() {
+    var el = document.createElement("div");
+        el.setAttribute("class", "lds-roller");
+
+    for(let i = 0; i < 7; i++) {
+        var child = document.createElement("div");
+            el.appendChild(child);
+    }
+
+    return el;
 }

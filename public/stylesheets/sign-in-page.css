@@ -82,7 +82,7 @@ body {
 
 #sign-in-cont form {
     position: absolute;
-    width: 50%;
+    width: 80%;
     left: 50%;
     height: fit-content;
     top: 50%;
@@ -107,6 +107,11 @@ body {
 
 #sign-in-cont form button:hover {
     transform: translateY(-0.2rem);
+}
+
+#sign-in-cont form button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 #sign-in-cont form button:active {
