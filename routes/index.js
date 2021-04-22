@@ -6,20 +6,7 @@ const multiparty = require("multiparty");
 const useragent = require("express-useragent");
 const validator = require("email-validator");
 const nodemailer = require("nodemailer");
-const multer = require("multer");
-const upload = multer();
 const fs = require("file-system");
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-      cb(null, 'public/images/uploadedImages/organisations');
-  },
-
-  // By default, multer removes file extensions so let's add them back
-  filename: function(req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
-});
 
 const { View } = require("grandjs");
 
@@ -344,6 +331,35 @@ async function saveImageFromBlob(baseString, path, name) {
 
     //Get the image file type
     var type = baseString.split("/")[1].split(";")[0];
+
+
+    
+    pool.connect((err, client, done) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      client.query("UPDATE organisations SET imagedata='" + baseString + "' WHERE id=" + name + " RETURNING id;", (err, resu) => {
+        done()
+        if (err) {
+          console.log(err.stack)
+          reject({error: err})
+        } else {
+          if(resu.rows[0]) {                 
+            resolve();
+          } else {
+            reject({error:'No organisation found'});
+          }
+        }
+      })
+    })
+
+
+
+
+
+
+
 
     //Save the image
     try {
