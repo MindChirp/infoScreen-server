@@ -70,7 +70,7 @@ function signOut() {
 window.onload = ()=>{
     //Check if user has any organisation requests pending
     checkOrganisationStatus(true);
-
+    initShortcuts();
     loadUserInfo();
     
     var dat = JSON.parse(localStorage.getItem("userInfo"))[1][0];
