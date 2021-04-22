@@ -109,7 +109,7 @@ body {
     z-index: 10;
 }
 
-#fullpage-menu .title:first-of-type {
+#fullpage-menu > .title:first-of-type {
     margin-top: 1rem;
     font-size: 2.3rem;
     background-color: var(--dark-secondary-button-color);
@@ -120,7 +120,7 @@ body {
     overflow: hidden;
     margin-bottom: 2rem;
 }
-#fullpage-menu .title:first-of-type::after {
+#fullpage-menu > .title:first-of-type::after {
     content: ".";
     color: transparent;
     background: rgb(131,58,180);
@@ -720,6 +720,7 @@ button#sign-out:active {
     animation: fade-in 300ms ease-out backwards;
     transform: translate(-50%, 100%);
     transition: all 300ms ease-out;
+    text-transform: initial;
 }
 
 .element-message:hover {
@@ -1036,4 +1037,53 @@ button#sign-out:active {
     border-radius: 0.25rem;
     padding: 1rem;
     max-width: 40rem;
+}
+
+.organisation-status > .wrapper form button {
+    margin-left: 1rem;
+    position: relative;
+}
+
+.org-page > .wrapper {
+    padding: 1rem; 
+    box-sizing: border-box;
+    position: relative;
+    width: fit-content;
+}
+
+.org-page > .wrapper label {
+    margin: 1rem 0 0 0rem;
+}
+
+.org-page > .wrapper .invite-user > .wrapper {
+    border: 1px solid white;
+    border-radius: 0.5rem;
+    width: fit-content;
+    padding: 1rem;
+}
+
+.org-page > .wrapper .title {
+    text-transform: uppercase;
+    margin: 0 0 0.5rem 0;
+}
+
+#user-stats #statistics-container {
+    height: fit-content;
+    padding: 1rem;
+    width: 100%;
+    background-color: var(--dark-secondary-button-color);
+    border-radius: 0.5rem;
+    position: relative;
+    min-height: 2rem;
+}
+
+#user-stats #statistics-container .no-stats {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+    font-weight: lighter;
+    margin: 0;
+    height: fit-content;
 }

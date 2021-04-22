@@ -473,7 +473,7 @@ router.get('/organisation/checkStatus', function(req, res) {
   //Fetch organisation status
   pool.connect((err, client, done) => {
     if (err) throw err
-    client.query("SELECT name, accepted, id, owner FROM organisations WHERE owner='" + name + "' AND email='" + email + "';", (err, resu) => {
+    client.query("SELECT name, accepted, id, owner, useraccepted FROM organisations WHERE owner='" + name + "' AND email='" + email + "';", (err, resu) => {
       done()
       if (err) {
         res.status(500).send({message:'Could not load organisation information'})
@@ -490,6 +490,47 @@ router.get('/organisation/checkStatus', function(req, res) {
 
 })
 
+router.post("/organisation/userVerify", (req, res) => {
+  if(!req.session.loggedin) {
+    res.status(403).send({message:'You are not signed in'});
+  }
+
+  var name = req.session.name;
+  var id = req.session.id;
+  var email = req.session.email;
+  console.log(name, email);
+
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.log(err); 
+      res.status(500).send({message: "Could not activate"})
+    }
+
+    var pass = fields.password[0];
+
+    //Post userverify
+    pool.connect((err, client, done) => {
+      if (err) {console.log(err); res.status(500).send({message: "Could not activate"})}
+      client.query("UPDATE organisations SET useraccepted=true WHERE owner='" + name + "' AND email='" + email + "' AND password=crypt('" + pass + "', password) RETURNING accepted, useraccepted;", (err, resu) => {
+        done()
+        if (err) {
+          res.status(500).send({message:'Could not load organisation information'})
+        } else {
+          if(resu.rows.length > 0) {
+            console.log(resu.rows);
+            res.status(200).send(resu.rows[0]);
+          } else {
+            res.status(403).send({message:'Authentication failed'});
+          }
+        }
+      })
+    })
+  })
+
+
+
+})
 
 
 module.exports = router;

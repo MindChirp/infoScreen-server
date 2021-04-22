@@ -37,6 +37,7 @@ body {
     border-radius: 0.5rem;
     animation: fade-in 300ms ease-out 0.5s;
     animation-fill-mode: both;
+    z-index: 2;
 }
 
 #sign-in-cont .icon {

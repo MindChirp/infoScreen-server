@@ -53,6 +53,17 @@ function forgotPass(e) {
 }
 
 function registerNew() {
+
+    //Hide the register a new account button
+    var el = document.querySelector("#sign-in-cont > div.bottom")
+    el.style = `
+        transition: all 300ms ease-in-out;
+        transform: translate(0,-130%);
+        position: relative;
+        opacity: 0;
+        pointer-events: none;
+    `;
+
     var form = document.getElementsByClassName("submission-form")[0]
     var par = form.parentNode;
     form.parentNode.removeChild(form)

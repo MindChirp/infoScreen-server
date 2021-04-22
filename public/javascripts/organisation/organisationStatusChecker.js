@@ -1,52 +1,88 @@
-async function checkOrganisationStatus() {
-    verifyOrganisation()
-    .then(data=>{
-        //Successful request :)
+async function checkOrganisationStatus(fetch) {
+    if(fetch) {
 
-        //In theory, there should only be one organisation returned
-        var org;
-        var owner; 
-        var id; 
-        var verified;
-    
-        try {
-            org = data.name;
-            owner = data.owner;
-            id = data.id;
-            verified = data.accepted;
-        } catch (error) {
-            showError("STRING");
-            return;
-        }
+        verifyOrganisation()
+        .then(data=>{
+            //Successful request :)
 
-        //An organisation is confirmed, lets update the sidebar
+            //In theory, there should only be one organisation returned
+            var org;
+            var owner; 
+            var id; 
+            var verified;
+            var userVerified;
+            try {
+                org = data.name;
+                owner = data.owner;
+                id = data.id;
+                verified = data.accepted;
+                verified = data.useraccepted;
+            } catch (error) {
+                showError("STRING");
+                return;
+            }
 
-        
-        var button = document.getElementsByName("applyOrg")[0];
-        
+            //An organisation is confirmed, lets update the sidebar
+
+            
+            var button = document.getElementsByName("applyOrg")[0];
+            
+            var sideBar = button.parentNode;
+
+            button.parentNode.removeChild(button);
+
+
+            //Enter the information in the localstorage
+            localStorage.setItem("orgInfo", JSON.stringify(data));
+
+
+            //Create a new organisation button
+            var title = "Organisation page"
+
+            if(verified == false || userVerified == false) {
+                title = "Check verification status";
+            } else {
+                //Call the general 'organisation found do something' function
+                showAllOptionsOrgFound();
+            }
+
+            createSidebarButton(title, "settings", "orgInfo", "Organisation page")
+
+        })
+        .catch(error=>{
+            //Oh no
+            showError(error);
+        })
+    } else {
+        //Get information from localstorage (to reduce server traffic)
+
+        var orgInfo = JSON.parse(localStorage.getItem("orgInfo"));
+
+        var org = orgInfo.name;
+        var owner = orgInfo.owner;
+        var id = orgInfo.id;
+        var verified = orgInfo.accepted;
+        var userVerified = orgInfo.useraccepted;
+
+        var button = document.getElementsByName("applyOrg")[0] || document.getElementsByName("orgInfo")[0];
+            
         var sideBar = button.parentNode;
 
         button.parentNode.removeChild(button);
 
-
-        //Enter the information in the localstorage
-        localStorage.setItem("orgInfo", JSON.stringify(data));
-
-
         //Create a new organisation button
         var title = "Organisation page"
 
-        if(verified == false) {
+        if(verified == false || userVerified == false) {
             title = "Check verification status";
+        } else {
+            //Call the general 'organisation found do something' function
+            showAllOptionsOrgFound();
         }
 
         createSidebarButton(title, "settings", "orgInfo", "Organisation page")
 
-    })
-    .catch(error=>{
-        //Oh no
-        showError(error);
-    })
+    }
 
 
 
@@ -71,7 +107,8 @@ function verifyOrganisation() {
                     accepted: boolean,
                     owner: string,
                     name: string,
-                    id: integer
+                    id: integer,
+                    useraccepted: boolean
                 }
                 */
                
@@ -116,4 +153,112 @@ function loadOrgStatus(menu, data) {
     `;
 
     wr.appendChild(info);
+
+
+    if(data.accepted) {
+        //Create the user verification box
+        var box = document.createElement("div");
+        box.className = "wrapper smooth-shadow";
+        box.style.padding = "2rem";
+        var title = document.createElement("p");
+        title.innerHTML = "Enter master password to activate organisation";
+
+        box.appendChild(title);
+        menu.appendChild(box);
+        box.style.marginTop = "1rem";
+
+
+        var form = document.createElement("form");
+        form.className = "activate-org";
+        box.appendChild(form);
+
+        var pass = FDButts.textInput();
+        pass.getElementsByTagName("input")[0].type = "password";
+        pass.style = `
+            margin: 0.5rem 0 0 0.5rem;
+        `
+        form.appendChild(pass);
+    
+    
+        var butt = document.createElement("button");
+        butt.innerHTML = "Activate";
+        butt.className = "button stdStyle smooth-shadow";
+        
+        form.appendChild(butt);
+    
+        butt.addEventListener("click", (e)=>{
+            e.preventDefault();
+
+            var butt = e.target;
+
+            butt.innerHTML = "Activating";
+            butt.disabled = true;
+
+            var passVal = butt.previousSibling.getElementsByTagName("input")[0].value;
+            
+            //Send a request to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/organisation/userVerify");
+
+            var formData = new FormData();
+
+            formData.append("password", passVal);
+
+            xhr.send(formData);
+
+            xhr.onreadystatechange = function() {
+                if(this.status == 200 && this.readyState == 4) {
+                    //OK
+                    butt.innerHTML = "Activated"; 
+
+                    var orgStat = JSON.parse(localStorage.getItem("orgInfo"));
+                    orgStat.useraccepted = true;
+                    orgStat.accepted = true;
+
+                    localStorage.setItem("orgInfo", JSON.stringify(orgStat));
+
+                    checkOrganisationStatus(false);
+
+                    
+                } else if(this.status != 200 && this.readyState == 4) {
+                    //Error
+                    butt.innerHTML = "Activate";
+                    showElementMessage(butt, JSON.parse(this.responseText).message);
+                    butt.disabled = false;
+                }
+            }
+        })
+    }
+
+
+}
+
+
+function showAllOptionsOrgFound() {
+    var cont = document.getElementById("action-buttons");
+
+    var x;
+    for(x of cont.childNodes) {
+        x.disabled = false;
+    }
+
+
+    //Fix the statistics page
+    var parent = document.getElementById("user-stats");
+
+    var toRemove = parent.querySelector(".no-stats");
+    toRemove.parentNode.removeChild(toRemove);
+
+
+    var stats = document.createElement("div");
+    stats.id = "statistics-container";
+    stats.className = "smooth-shadow";
+    parent.appendChild(stats);
+
+
+    var msg = document.createElement("p");
+    msg.innerHTML = "No statistics found";
+    msg.className = "no-stats"; //THERE IS A DIFFERENCE BETWEEN THIS ONE AND THE .no-stats ABOVE!
+    stats.appendChild(msg);
+    
 }

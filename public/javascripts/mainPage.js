@@ -69,7 +69,7 @@ function signOut() {
 
 window.onload = ()=>{
     //Check if user has any organisation requests pending
-    checkOrganisationStatus();
+    checkOrganisationStatus(true);
 
     loadUserInfo();
     
@@ -178,10 +178,42 @@ function previewShows() {
     menu.appendChild(side); 
 }
 
-function userOptions() {
-    var menu = displayActionBlock("options");
+function toggleHomeButtons(bool) {
+    //Check the localstorage if the user has an organisation
+    var orgInfo = JSON.parse(localStorage.getItem("orgInfo"));
 
-    console.log(menu.new)
+    var hasOrg = false;
+    console.log(orgInfo)
+    if(orgInfo.useraccepted && orgInfo.accepted) {
+        hasOrg = true;
+    }
+    var ignoreArray = [];
+
+    if(hasOrg == false) {
+        ignoreArray = ["open", "live edit", "preview", "user options"];
+    }
+
+    var butts = document.getElementById("action-buttons").children;
+    
+    var x;
+    for(x of butts) {
+        var y;
+        var ignore = false;
+        for(y of ignoreArray) {
+            if(x.innerHTML.toLowerCase() == y) {
+                ignore = true;
+            }
+        }
+
+        if(!ignore) {
+            x.disabled = bool;
+        }
+    }
+}
+
+function userOptions() {
+
+    var menu = displayActionBlock("options");
 
     if(!menu.new) return;
     var t = document.createElement("h1");
@@ -207,6 +239,9 @@ function userOptions() {
 
 
 function displayActionBlock(id) {
+
+    toggleHomeButtons(true);
+
     var el = document.getElementById(id);
     if(!el) return new Error("Could not find the element"); //Error handling
 
@@ -241,6 +276,7 @@ function displayActionBlock(id) {
         close.addEventListener("click", (e)=>{
             var menu = e.target.closest(".action-menu");
             menu.style.display = "none";
+            toggleHomeButtons(false);            
             toggleBg();
         });
 
@@ -600,7 +636,11 @@ function showElementMessage(el, message) {
     //Kill the element after some time
 
     setTimeout(()=>{
-        msg.parentNode.removeChild(msg);
+        try {
+            msg.parentNode.removeChild(msg);
+        } catch (error) {
+            console.log("Couldn't find element message")
+        }
     }, 5000);
 
     return msg;
@@ -862,7 +902,7 @@ function applyOrg(menu) {
                     el.innerHTML = "Organisation has been created";
 
                     //Change the sidebar
-                    checkOrganisationStatus();
+                    checkOrganisationStatus(true);
                 })
                 .catch((value)=>{
                     alert("Could not create the organisation. (" + value + ")");
@@ -950,11 +990,10 @@ function orgInfo(menu) {
     title.innerHTML = data.name;
     title.className = "title";
     menu.appendChild(title);
-
-    if(data.accepted == false) {
+    if(data.useraccepted == false || data.accepted == false) {
         loadOrgStatus(menu, data); //Defined in organisationStatusChecker.js
-    } else if(data.accepted == true) {
-        loadOrgPage(menu, data); //Defined in orgPage.js
+    } else if(data.accepted == true && data.useraccepted == true) {  
+        loadOrgPage(menu, data); //Defined in orgPage.js    
         //loadOrgStatus(menu, data);
 
     }
