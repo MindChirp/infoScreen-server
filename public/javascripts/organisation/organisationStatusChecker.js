@@ -168,6 +168,11 @@ function loadOrgStatus(menu, data) {
         box.style.marginTop = "1rem";
 
 
+        var bkg = document.createElement("div");
+        bkg.className = "background-animation";
+        box.appendChild(bkg);
+
+
         var form = document.createElement("form");
         form.className = "activate-org";
         box.appendChild(form);
@@ -214,6 +219,9 @@ function loadOrgStatus(menu, data) {
                     var orgStat = JSON.parse(localStorage.getItem("orgInfo"));
                     orgStat.useraccepted = true;
                     orgStat.accepted = true;
+
+                    console.log(butt.closest(".wrapper").querySelector(".background-animation"))
+                    butt.closest(".wrapper").querySelector(".background-animation").style.animation = "animate-after-activation 250ms ease-in-out both 1s;"
 
                     localStorage.setItem("orgInfo", JSON.stringify(orgStat));
 

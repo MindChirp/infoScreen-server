@@ -283,9 +283,9 @@ router.post('/applyOrg', (req, res)=>{
 });
 
 router.post("/org/upload/pfp", async function(req, res) {
-  /*if(!req.session.loggedin) {
+  if(!req.session.loggedin) {
     res.status(403).send();
-  }*/
+  }
 
   var data = new multiparty.Form();
   data.parse(req, async (err, fields, files) => {
@@ -296,8 +296,8 @@ router.post("/org/upload/pfp", async function(req, res) {
 
     var orgId = fields.id[0];
     var imgData = fields.data[0];
-//    console.log(Buffer.from(buffer, "binary"));
-    await saveImageFromBlob(imgData, "./public/images/uploadedImages/organisations/", orgId)
+
+    await saveImageFromBlob(imgData, "UPDATE organisations SET imagedata='" + imgData + "' WHERE id=" + orgId + " RETURNING id;")
     .then((result)=>{
       req.session.hasOrgRegistered = true;
       res.status(200).send();
@@ -309,6 +309,34 @@ router.post("/org/upload/pfp", async function(req, res) {
   })
 
 }); 
+
+
+
+router.post("/usr/upload/pfp", async function(req, res) {
+
+    var userId = req.session.id;
+    var email = req.session.email;
+    var name = req.session.name;
+
+    var data = new multiparty.Form();
+    data.parse(req, async (err, fields, files) => {
+      if (err) {
+        res.status(500).send(err);
+        throw err;
+      }
+      var imgData = fields.imageData[0];
+      
+      await saveImageFromBlob(imgData, "UPDATE users SET imagedata='" + imgData + "' WHERE id=" + userId + " AND email='" + email + "' AND name='" + name + "' RETURNING id;")
+      .then((result)=>{
+      req.session.hasOrgRegistered = true;
+      res.status(200).send();
+    })
+    .catch((result) => {
+      res.status(500).send({message: result.error});
+    })
+  });
+})
+
 
 function decodeBase64Image(dataString) {
   var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
@@ -324,10 +352,10 @@ function decodeBase64Image(dataString) {
   return response;
 }
 
-async function saveImageFromBlob(baseString, path, name) {
+async function saveImageFromBlob(baseString, command) {
   return new Promise(async(resolve, reject) => {
 
-    var imageBuffer = decodeBase64Image(baseString);
+    //var imageBuffer = decodeBase64Image(baseString);
 
     //Get the image file type
     var type = baseString.split("/")[1].split(";")[0];
@@ -339,7 +367,7 @@ async function saveImageFromBlob(baseString, path, name) {
         console.log(err);
         return;
       }
-      client.query("UPDATE organisations SET imagedata='" + baseString + "' WHERE id=" + name + " RETURNING id;", (err, resu) => {
+      client.query(command, (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
