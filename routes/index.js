@@ -325,7 +325,7 @@ router.post("/usr/upload/pfp", async function(req, res) {
         throw err;
       }
       var imgData = fields.imageData[0];
-      
+      console.log(imgData)
       await saveImageFromBlob(imgData, "UPDATE users SET imagedata='" + imgData + "' WHERE id=" + userId + " AND email='" + email + "' AND name='" + name + "' RETURNING id;")
       .then((result)=>{
       req.session.hasOrgRegistered = true;
