@@ -381,28 +381,6 @@ async function saveImageFromBlob(baseString, command) {
         }
       })
     })
-
-
-
-
-
-
-
-
-    //Save the image
-    try {
-      fs.writeFile(path + name + "." + type, imageBuffer.data, (err) => {
-        if(err) {
-          console.log(err);
-          reject({status: 'Could not save file', error: err});
-        } else {
-          resolve()
-        }
-      });
-    } catch (error) {
-      console.log(error);
-      reject(error);
-    }
   })
 }
 
