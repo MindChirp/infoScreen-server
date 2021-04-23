@@ -7,12 +7,13 @@ function toggleSidebar() {
         sideBar.displaying = true;
         sideBar.style.transform = "translate(0)";
         shade.style.display = "initial";
-        infoB.style.display = "initial";
+        if(infoB){infoB.style.display = "initial";};
     } else {
         sideBar.displaying = false;
         sideBar.style.transform = "translate(-100%)";
         shade.style.display = "none";
-        infoB.style.display = "none";
+        if(infoB){infoB.style.display = "none";};
+
 
     }
 }
@@ -72,13 +73,40 @@ window.onload = ()=>{
     checkOrganisationStatus(true);
     initShortcuts();
     loadUserInfo();
+
+
     
     var dat = JSON.parse(localStorage.getItem("userInfo"))[1][0];
     if(!dat.organisation) {
         createSidebarButton("Join organisation", "corporate_fare", "org", "Join organisation");
         createSidebarButton("Create organisation", "check", "applyOrg", "Apply for organisation");
     }
+
+
+    //Initialize the profile picture
+    var img = document.querySelector("#user-container > div > div.picture-wrapper > img");
+    img.src = dat.imagedata;
 }
+
+
+
+
+//Define the close if not menu element is clicked code
+
+var elementArray = ["#select-profile-picture"];
+window.addEventListener("click", (e)=>{
+    var x;
+    for(x of elementArray) {
+        if(x) {
+            if(!e.target.closest(x)) {
+                var el = document.querySelector(x)
+                if(el) {
+                    el.parentNode.removeChild(el);
+                }
+            }
+        }
+    }
+})
 
 
 async function loadUserInfo() {
@@ -766,7 +794,6 @@ function applyOrg(menu) {
 
             //Check if there is an error message
             if(img.querySelector(".error")) {
-                console.log(img.querySelector(".error"));
                 var el = img.querySelector(".error");
                 el.parentNode.removeChild(el);
 
@@ -897,12 +924,32 @@ function applyOrg(menu) {
                 //Send profile image
                 var imageDat = imageSection.querySelector("#upload-photo").files[0];
                 await uploadOrgPfp(imageDat, orgId)
-                .then((value)=>{
-                    //Organisation has been created, inform the user
-                    el.innerHTML = "Organisation has been created";
-
+                .then(async (value)=>{
                     //Change the sidebar
                     checkOrganisationStatus(true);
+                    
+                    //Organisation has been created, inform the user
+                    el.innerHTML = "Organisation has been created";
+                    await sleep(1000);
+                    el.style.transform = "translate(-50%, 200%)";
+                    await sleep(500);
+                    
+                    //Close the fullpage menu, reveal the new option in the sidebar
+                    var fp = document.getElementById("fullpage-menu");
+                    if(fp) {
+                        fp.parentNode.removeChild(fp);
+                    }
+
+                    var newButton = document.getElementsByName("orgInfo")[0];
+                    //Show an outline around the button
+                    newButton.style.border = "solid 2px white";
+                    newButton.style.borderRadius = "0.5rem";
+                    newButton.style.boxSizing = "border-box";
+
+                    await sleep(5000);
+                    newButton.style.border = "none";
+                    newButton.style.borderRadius = "0";
+                    newButton.style.boxSizing = "initial";
                 })
                 .catch((value)=>{
                     alert("Could not create the organisation. (" + value + ")");
@@ -916,6 +963,14 @@ function applyOrg(menu) {
         }
 
     });
+}
+
+function sleep(time) {
+    return new Promise(resolve=>{
+        setTimeout(()=>{
+            resolve();
+        }, time)
+    })
 }
 
 function getBase64(file) {
@@ -954,6 +1009,34 @@ async function uploadOrgPfp(image, id) {
     })
 }
 
+
+
+async function uploadUsrPfp(image) {
+    return new Promise(async (resolve, reject) => {
+        var formData = new FormData();
+        
+        var base64 = await getBase64(image);
+
+        //debugBase64(base64) I used this to verify the base data validity
+        
+        formData.append("imageData", base64);
+        
+        fetch(`/usr/upload/pfp`, {
+            method:"POST", 
+            body:formData
+        })
+        .then(response => {
+        if(!response.ok) {
+            reject(response.statusText);
+        }
+            resolve(response)
+        })
+        .catch(error => reject(error));
+    })
+}
+
+
+
 function createSidebarButton(title, icon, name, hover) {
     var el = document.createElement("button");
     el.setAttribute("onclick", "openFullPage(this)");
@@ -979,7 +1062,7 @@ function createSidebarButton(title, icon, name, hover) {
     el.appendChild(lab);
 
     document.getElementById("side-bar").querySelector(".content").appendChild(el);
-
+    return el;
 }
 
 
@@ -1012,4 +1095,12 @@ function loaderWheel() {
     }
 
     return el;
+}
+
+
+function closeFullPage() {
+    var fp = document.getElementById("fullpage-menu");
+    if(!fp) return;
+
+    
 }

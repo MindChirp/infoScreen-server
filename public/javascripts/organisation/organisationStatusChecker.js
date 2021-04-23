@@ -80,8 +80,12 @@ async function checkOrganisationStatus(fetch) {
             showAllOptionsOrgFound();
         }
 
-        createSidebarButton(title, "settings", "orgInfo", "Organisation page")
+        var button = createSidebarButton(title, "settings", "orgInfo", "Organisation page")
 
+        if(verified == false || userVerified == false) {
+            //Give the button a higher z-index
+            button.style.zIndex = "100";
+        }
     }
 
 

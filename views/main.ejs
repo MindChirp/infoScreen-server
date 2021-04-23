@@ -69,7 +69,9 @@
             <div id="user-container" name="hideable">
                 <div class="pfp-container smooth-shadow">
                     <div class="info-box smooth-shadow">Profile picture</div>
-                    <img class="pfp" src="/images/resources/default.png">
+                    <div class="picture-wrapper" onclick="selectPfp(this.parentNode)">
+                        <img class="pfp" src="/images/resources/default.png"onclick="">
+                    </div>
                 </div>
                 <h1 id="welcome-text" class="smooth-shadow">Loading</h1>
             </div>
@@ -101,5 +103,6 @@
         <script src="/javascripts/shortcuts.js"></script>
         <script src="/javascripts/organisation/organisationStatusChecker.js" async defer></script>
         <script src="/javascripts/organisation/orgPage.js" async defer></script>
+        <script src="/javascripts/profilePicture.js" async defer></script>
     </body>
 </html>

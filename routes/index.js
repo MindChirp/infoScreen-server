@@ -314,21 +314,25 @@ router.post("/org/upload/pfp", async function(req, res) {
 
 router.post("/usr/upload/pfp", async function(req, res) {
 
-    var userId = req.session.id;
+    var userId = req.session.userId;
     var email = req.session.email;
     var name = req.session.name;
 
+    console.log(userId, email, name)
     var data = new multiparty.Form();
     data.parse(req, async (err, fields, files) => {
       if (err) {
         res.status(500).send(err);
         throw err;
       }
-      var imgData = fields.imageData[0];
-      console.log(imgData)
+      var imgData;
+      try {
+        var imgData = fields.imageData[0];
+      } catch (error) {
+        res.status(400).send({message:'Contains no image'});
+      }
       await saveImageFromBlob(imgData, "UPDATE users SET imagedata='" + imgData + "' WHERE id=" + userId + " AND email='" + email + "' AND name='" + name + "' RETURNING id;")
       .then((result)=>{
-      req.session.hasOrgRegistered = true;
       res.status(200).send();
     })
     .catch((result) => {
@@ -408,7 +412,7 @@ router.post("/auth", async (req, res) => {
         console.log(err);
         return;
       }
-      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated, admin FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
+      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated, admin, imagedata FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -426,7 +430,7 @@ router.post("/auth", async (req, res) => {
             req.session.isDeveloper = resu.rows[0].developer;
             req.session.admin = resu.rows[0].admin;
             req.session.name = resu.rows[0].name;
-            req.session.id = resu.rows[0].id;
+            req.session.userId = resu.rows[0].id;
             req.session.email = resu.rows[0].email;
 
             res.send(["OK", resu.rows]);

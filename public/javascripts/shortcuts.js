@@ -53,4 +53,9 @@ function closeExistingModals() {
         toggleSidebar();
     }
 
+    //Close pfp selector
+    if(document.getElementById("select-profile-picture")) {
+        var el = document.getElementById("select-profile-picture");
+        el.parentNode.removeChild(el);
+    }
 }
