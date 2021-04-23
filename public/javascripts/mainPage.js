@@ -935,10 +935,7 @@ function applyOrg(menu) {
                     await sleep(500);
                     
                     //Close the fullpage menu, reveal the new option in the sidebar
-                    var fp = document.getElementById("fullpage-menu");
-                    if(fp) {
-                        fp.parentNode.removeChild(fp);
-                    }
+                    closeFullPage();
 
                     var newButton = document.getElementsByName("orgInfo")[0];
                     //Show an outline around the button
@@ -1098,9 +1095,11 @@ function loaderWheel() {
 }
 
 
-function closeFullPage() {
+async function closeFullPage() {
     var fp = document.getElementById("fullpage-menu");
     if(!fp) return;
 
-    
+    fp.style.animation = "fp-slide-down 250ms ease-in-out both";
+    await sleep(250);
+    fp.parentNode.removeChild(fp);
 }

@@ -42,8 +42,7 @@ function closeExistingModals() {
     }
 
     if(document.getElementById("fullpage-menu")) {
-        var el = document.getElementById("fullpage-menu");
-        el.parentNode.removeChild(el);
+        closeFullPage();
         closingState.closedModal = true;
     }
 
