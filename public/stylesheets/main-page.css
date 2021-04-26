@@ -173,16 +173,16 @@ body {
     transform: translate(-50%, -50%);
     display: none;
     overflow: hidden;
+    min-width: 500px;
 }
 
 .action-menu .side-bar {
     height: 100%;
-    width: 7rem;
+    width: 100%;
     background-color: var(--secondary-button-color);
-    float: left; 
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
+    border-radius: 0.5rem;
+    display: inline-block;
 }
 
 .action-menu .side-bar .title-container {
@@ -218,6 +218,7 @@ body {
     cursor: pointer;
     transition: all 200ms ease-out;
     overflow: hidden;
+    z-index: 2;
 }
 
 .action-menu .close-button:hover {
@@ -241,6 +242,81 @@ body {
     display: none;
 }
 
+
+.action-menu > .content >.wrapper {
+    height: 100%;
+    width: auto;
+    display: inline-block;
+    padding: 1.5rem 1rem 1rem 0.5rem;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.action-menu > .content >.wrapper input {
+    background-color: var(--secondary-button-color);
+}
+
+.action-menu > .content >.wrapper label.fd-text-input {
+    margin-bottom: 2rem;
+}
+
+.action-menu > .content >.wrapper .wrapper {
+    height: fit-content;
+    width: 100;
+    display: block;
+    
+}
+
+.action-menu > .content >.wrapper .wrapper.template-container {
+    padding: 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    padding-top: 0;
+}
+
+
+.action-menu#createproject > .content >.wrapper button.submit {
+    background-color: var(--secondary-button-color);
+    margin: 0.5rem 0 0 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-menu#createproject > .content >.wrapper button.submit::after {
+    content: ".";
+    color: transparent;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0.2rem;
+    background: rgb(131,58,180);
+    background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
+
+}
+
+.action-menu > .content >.wrapper .wrapper .title {
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: lighter;
+    margin: 0.5rem 0 0 0;
+    width: 100%;
+}
+
+.action-menu > .content >.wrapper .wrapper.template-container > .container {
+    background: var(--secondary-button-color);
+    height: 10rem;
+    width: 70%;
+    min-width: 20rem;
+    border-radius: 0.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-menu > .content >.wrapper .wrapper.template-container > .container > p {
+    font-weight: lighter;
+}
 
 #banner > .bg {
 
@@ -610,6 +686,7 @@ div:hover > .info-box, button:hover > .info-box {
     font-weight: lighter;
     position: relative;
     overflow: hidden;
+    margin-bottom: 0.5rem;
 }
 
 #action-buttons button:disabled {
@@ -636,8 +713,8 @@ div:hover > .info-box, button:hover > .info-box {
     transform: none;
 }
 
-#action-buttons button:not(:first-of-type) {
-    margin-left: 1rem;
+#action-buttons button:not(:last-of-type) {
+    margin-right: 1rem;
 }
 
 button#sign-out {

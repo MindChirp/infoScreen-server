@@ -213,7 +213,6 @@ function toggleHomeButtons(bool) {
     var orgInfo = JSON.parse(localStorage.getItem("orgInfo"));
 
     var hasOrg = false;
-    console.log(orgInfo)
     if(orgInfo.useraccepted && orgInfo.accepted) {
         hasOrg = true;
     }
@@ -288,6 +287,9 @@ function displayActionBlock(id) {
             width: 100%;
             padding: 1rem;
             box-sizing: border-box;
+            display: grid;
+            grid-template-columns: 7rem auto;
+            grid-template-rows: 100%;
         `;
         cont.className = "content";
 

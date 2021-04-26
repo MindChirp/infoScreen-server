@@ -1,8 +1,13 @@
 
 function handleShortcut(e) {
     if(e.code == "Escape") {
-        closeExistingActionMenus();
-        closeExistingModals();
+        closeExistingModals()
+        .then((result)=>{
+            if(!result.modalsClosed) {
+                console.log(result)
+                closeExistingActionMenus();
+            }
+        })
     }
 }
 
@@ -35,26 +40,36 @@ function closeExistingActionMenus() {
 
 
 function closeExistingModals() {
+    return new Promise((resolve)=>{
 
-    var closingState = {
-        closedModal: false,
-        closedSidebar: false
-    }
-
-    if(document.getElementById("fullpage-menu")) {
-        closeFullPage();
-        closingState.closedModal = true;
-    }
-
-
-    var sideBar = document.getElementById("side-bar");
-    if(sideBar.displaying && !closingState.closedModal) {
-        toggleSidebar();
-    }
-
-    //Close pfp selector
-    if(document.getElementById("select-profile-picture")) {
-        var el = document.getElementById("select-profile-picture");
-        el.parentNode.removeChild(el);
-    }
+        
+        var closingState = {
+            closedModal: false,
+            closedSidebar: false
+        }
+        
+        if(document.getElementById("fullpage-menu")) {
+            closeFullPage();
+            closingState.closedModal = true;
+        }
+        
+        
+        var sideBar = document.getElementById("side-bar");
+        if(sideBar.displaying && !closingState.closedModal) {
+            closingState.closedSidebar = true;
+            toggleSidebar();
+        }
+        
+        //Close pfp selector
+        if(document.getElementById("select-profile-picture")) {
+            var el = document.getElementById("select-profile-picture");
+            el.parentNode.removeChild(el);
+        }
+    
+        if(closingState.closedModal || closingState.closedSidebar) {
+            resolve({modalsClosed: true});
+        } else {
+            resolve({modalsClosed: false});
+        }
+    })
 }
