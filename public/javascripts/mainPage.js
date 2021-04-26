@@ -85,7 +85,9 @@ window.onload = ()=>{
 
     //Initialize the profile picture
     var img = document.querySelector("#user-container > div > div.picture-wrapper > img");
-    img.src = dat.imagedata;
+    if(dat.imagedata) {
+        img.src = dat.imagedata;
+    }
 }
 
 

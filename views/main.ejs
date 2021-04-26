@@ -78,12 +78,14 @@
 
             <div id="action-buttons" name="hideable">
                 <button class="smooth-shadow" onclick="openProjectMenu()" disabled>Open</button>
+                <button class="smooth-shadow" onclick="createProjectMenu()" disabled>Create</button>
                 <button class="smooth-shadow" onclick="openLiveMenu()" disabled>Live Edit</button>
                 <button class="smooth-shadow" onclick="previewShows()" disabled>Preview</button>
                 <button class="smooth-shadow" onclick="userOptions()">User Options</button>
             </div>
 
             <div class="action-menu smooth-shadow" id="projects"></div>
+            <div class="action-menu smooth-shadow" id="createproject"></div>
             <div class="action-menu smooth-shadow" id="live"></div>
             <div class="action-menu smooth-shadow" id="preview"></div>
             <div class="action-menu smooth-shadow" id="options"></div>
@@ -103,6 +105,7 @@
         <script src="/javascripts/shortcuts.js"></script>
         <script src="/javascripts/organisation/organisationStatusChecker.js" async defer></script>
         <script src="/javascripts/organisation/orgPage.js" async defer></script>
+        <script src="/javascripts/editor/createProject.js" async defer></script>
         <script src="/javascripts/profilePicture.js" async defer></script>
     </body>
 </html>
