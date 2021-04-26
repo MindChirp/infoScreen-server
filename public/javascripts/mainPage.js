@@ -1,3 +1,5 @@
+
+
 function toggleSidebar() {
     var sideBar = document.getElementById("side-bar");
     var shade = document.getElementById("dark-shade-modal");

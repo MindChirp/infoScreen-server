@@ -1,3 +1,4 @@
+
 function createProjectMenu() {
     var menu = displayActionBlock("createproject");
     if(!menu.new) return;
@@ -57,4 +58,60 @@ function createProjectMenu() {
     create.className = "submit button stdStyle smooth-shadow";
     create.innerHTML = "Create";
     wrapper.appendChild(create);
+
+
+    
+    
+    create.addEventListener("click", (e)=>{
+        
+        //Get the title and description
+        var title = name.getElementsByTagName("input")[0].value;
+        var description = desc.getElementsByTagName("input")[0].value;
+
+        var cancelContinue = false;
+
+        if(title.trim().length == 0) {
+            cancelContinue = true;
+            showElementMessage(name, "Name the project");
+        }
+
+        if(description.trim().length == 0) {
+            cancelContinue = true;
+            showElementMessage(desc, "Create a description");
+        }
+
+        if(cancelContinue) {
+            return;
+        }
+
+        showElementMessage(create, "This function is disabled");
+        return;
+
+        createProject(title, description)
+        .then((response)=>{
+            if(response.ok) {
+                //Success
+            } else {
+                console.log(response);
+            }
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+    })
+}
+
+
+
+function createProject(title, desc) {
+    var formData = new FormData();
+    formData.append("title", title);
+    formData.append("desc", desc);
+
+    fetch('/org/upload/project', {
+        method: "POST",
+        body: formData
+    })
+    .then(response => resolveContent(response))
+    .catch(error => PromiseRejectionEvent(error))
 }

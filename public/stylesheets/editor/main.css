@@ -1,0 +1,118 @@
+body {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto 10rem;
+    background: var(--main-bg-color);
+    overflow: hidden;
+}
+:root {
+    --main-bg-color: white;
+    --main-button-color: #E8E0D9;
+    --secondary-button-color: #d9cbbf;
+    --title-color: black;
+    --secondary-color: #E8E0D9;
+    --paragraph-color: rgb(50,50,50);
+    --slider-color: #4da0ff;
+    --slider-disabled-color: #a3ceff;
+    --slider-disabled-color: #a3ceff;
+    --light-shade: rgb(150,150,150);
+
+  }
+
+#top, #bottom {
+    height: 100%;
+    width: 100%;
+}
+
+#bottom {
+    background-color: var(--main-bg-color);
+    border: solid var(--slider-color);
+    border-width: 2px 0 0 0;
+}
+
+#bottom > .slides {
+    height: 100%;
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
+    max-width: 100vw;
+
+    align-items: center;
+    flex-wrap: nowrap;
+    
+    padding: 0 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+
+}
+
+#bottom > .slides > .slide {
+    height: 7rem;
+    width: calc(7rem * (16/9)); /*16:9 aspect ratio*/
+    background-color: var(--main-bg-color);
+    border: solid 2px var(--slider-disabled-color);
+    border-radius: 0.5rem;
+
+    flex: 0 0 auto;
+    display: inline-flex;
+
+    cursor: pointer;
+
+    transition: all 100ms ease-out;
+    animation: slide-in-slide 200ms ease-out both; /*Nice name lol*/
+}  
+
+@keyframes slide-in-slide {
+    0%{transform: translate(-5rem); opacity: 0.5rem;}
+    100%{transform: translate(0rem); opacity: 1rem;}
+}
+
+#bottom > .slides > .slide:hover, .slide.active {
+    transform: scale(1.02) translate(0, -0.2rem);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}
+
+#bottom > .slides > .slide.active {
+
+}
+
+#bottom > .slides > .slide:not(:last-of-type) {
+    margin-right: 1rem;
+}
+
+#bottom > .slides > .slide p {
+    vertical-align: middle;
+    margin: auto;
+    color: var(--paragraph-color);
+    text-align: center;
+}
+
+#bottom > .slides > button.add-slide {
+    background-color: transparent;
+    vertical-align: middle;
+    margin: 0 0 0 0.5rem;
+    color: var(--slider-color);
+    margin-right: 1rem;
+}
+
+@keyframes slide-button {
+    0% {
+        transform: translate(0)
+    }
+    100% {
+        transform: translate(calc(7rem * (16/9)))
+    }
+}
+
+#bottom > .slides > button.add-slide:hover {
+    background-color: var(--secondary-color);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}

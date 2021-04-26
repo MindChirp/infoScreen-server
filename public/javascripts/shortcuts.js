@@ -9,6 +9,11 @@ function handleShortcut(e) {
             }
         })
     }
+    else if(e.code == "BracketLeft") {
+        var editor = new EditorTools();
+        editor.launchEditor();
+    }
+    console.log(e.code)
 }
 
 

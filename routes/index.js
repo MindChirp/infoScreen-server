@@ -55,6 +55,20 @@ router.get('/main', function(req, res, next) {
   res.render("main");
 });
 
+router.get('/editor', function(req, res, next) {
+  if(!req.session.loggedin) {
+    res.redirect("/");
+    return;
+  }
+  var source = req.headers['user-agent'],
+  ua = useragent.parse(source);
+  if(ua.isIE) {
+    //Is internet explorer, redirect
+    res.render("notSupported");
+  }
+  res.render("editor");
+});
+
 
 
 router.get('/', function(req, res, next) {
@@ -311,6 +325,23 @@ router.post("/org/upload/pfp", async function(req, res) {
 }); 
 
 
+router.post("/org/upload/project", async function(req, res) {
+  var userId = req.session.userId;
+  var email = req.session.email;
+  var name = req.session.name;
+
+  var data = new multiparty.Form();
+  data.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(500).send(err);
+      throw err;
+    }
+
+
+
+  });
+});
+
 
 router.post("/usr/upload/pfp", async function(req, res) {
 
@@ -318,7 +349,6 @@ router.post("/usr/upload/pfp", async function(req, res) {
     var email = req.session.email;
     var name = req.session.name;
 
-    console.log(userId, email, name)
     var data = new multiparty.Form();
     data.parse(req, async (err, fields, files) => {
       if (err) {

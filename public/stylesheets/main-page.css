@@ -279,7 +279,6 @@ body {
     background-color: var(--secondary-button-color);
     margin: 0.5rem 0 0 1rem;
     position: relative;
-    overflow: hidden;
 }
 
 .action-menu#createproject > .content >.wrapper button.submit::after {
@@ -292,7 +291,7 @@ body {
     height: 0.2rem;
     background: rgb(131,58,180);
     background: linear-gradient(41deg, rgba(131,58,180,1) 0%, rgba(181,73,227,1) 28%, rgba(253,29,29,1) 83%, rgba(252,145,69,1) 100%);
-
+    border-radius: 0 0 0.25rem 0.25rem;
 }
 
 .action-menu > .content >.wrapper .wrapper .title {
@@ -622,7 +621,7 @@ body {
 .info-box::before {
     pointer-events: none;
     position: absolute;
-    bottom: 0;
+    bottom: 1px;
     left: 50%;
     width: 0;
     height: 0;
@@ -825,7 +824,7 @@ button#sign-out:active {
 .element-message::before {
     pointer-events: none;
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 50%;
     width: 0;
     height: 0;
@@ -843,7 +842,7 @@ button#sign-out:active {
     color: var(--title-color);
     font-size: 1rem;
     font-weight: lighter;
-    line-height: 1.5rem;
+    line-height: 1rem;
 }
 
 .apply-for-org > .main-wrapper {
