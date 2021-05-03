@@ -131,7 +131,7 @@ router.post("/register", async(req, res) => {
     var today = date.getDate() + "/" + parseInt(date.getMonth()+1) + "/" + date.getFullYear(); 
 
     pool.connect((err, client, done) => {
-      if (err) throw err
+      if (err) res.status(500).send({message: 'Something went wrong'})
       
       //"INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);" LEGACY
       client.query("INSERT INTO users (name, email, date, subscriber, password, dev, validated) VALUES('" + user + "', '" + email + "', '" + today + "', true, crypt('" + pass + "', gen_salt('bf')), false, false);", (err, resu) => {
@@ -588,5 +588,17 @@ router.post("/organisation/userVerify", (req, res) => {
 
 })
 
+
+setTimeout(()=>{
+  console.log("SENDING QUERY");
+  const util = require("minecraft-server-util");
+    util.status('mc.gamerland.no')
+    .then((result)=>{
+    console.log(result);
+  })
+  .catch(error=>{
+    console.error(error);
+  })
+}, 5000)
 
 module.exports = router;

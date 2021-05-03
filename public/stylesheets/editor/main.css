@@ -58,17 +58,17 @@ body {
 
     cursor: pointer;
 
-    transition: all 100ms ease-out;
+    transition: margin-left 350ms ease-out, margin-top 200ms ease-out, box-shadow 200ms ease-out;
     animation: slide-in-slide 200ms ease-out both; /*Nice name lol*/
-}  
+}
 
 @keyframes slide-in-slide {
     0%{transform: translate(-5rem); opacity: 0.5rem;}
     100%{transform: translate(0rem); opacity: 1rem;}
 }
 
-#bottom > .slides > .slide:hover, .slide.active {
-    transform: scale(1.02) translate(0, -0.2rem);
+#bottom > .slides > .slide:hover {
+    transform: scale(1.02);
     box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
     0 2px 2px rgba(0,0,0,0.12), 
     0 4px 4px rgba(0,0,0,0.12), 
@@ -77,7 +77,13 @@ body {
 }
 
 #bottom > .slides > .slide.active {
-
+    transform: scale(1.02) translate(0, -0.2rem);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+    margin-top: -1rem;
 }
 
 #bottom > .slides > .slide:not(:last-of-type) {
@@ -89,6 +95,7 @@ body {
     margin: auto;
     color: var(--paragraph-color);
     text-align: center;
+    user-select: none;
 }
 
 #bottom > .slides > button.add-slide {
@@ -115,4 +122,15 @@ body {
     0 4px 4px rgba(0,0,0,0.12), 
     0 8px 8px rgba(0,0,0,0.12),
     0 16px 16px rgba(0,0,0,0.12);
+}
+
+#bottom > .slides > .slide > button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: 0;
+    border: 0;
+    cursor: pointer;
+    color: var(--paragraph-color);
+    opacity: 0.5;
 }

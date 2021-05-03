@@ -3,6 +3,7 @@
     height: 15px;
     margin-right: 1rem;
     background-color: none;
+    position: absolute;
 }
 
 ::-webkit-scrollbar-button {

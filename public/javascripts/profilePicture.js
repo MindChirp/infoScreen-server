@@ -102,7 +102,7 @@ async function selectPfp(button) {
 
                     })
                     .catch((error)=>{
-                        console.log(error);a
+                        console.log(error);
                         showElementMessage(cont, "Could not upload");
                     })
                 })
