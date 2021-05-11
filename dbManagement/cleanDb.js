@@ -3,13 +3,13 @@ var pool;
 
 
 
-if(true) {
+if(process.env.DEVELOPERMODE) {
   pool = new Pool({
     host: 'localhost',
-    user: "postgres",
-    password: "8Frikkfrikkern8",
-    database: "infoscreen",
-    port: "3000"
+    user: process.env.USERD,
+    password: process.env.PASSWORDD,
+    database: process.env.DATABASED,
+    port: process.env.PORTD
   })
 } else {
   pool = new Pool({
