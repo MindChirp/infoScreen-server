@@ -387,14 +387,14 @@ function decodeBase64Image(dataString) {
 }
 
 async function saveImageFromBlob(baseString, command) {
-  return new Promise(async(resolve, reject, command) => {
+  return new Promise(async(resolve, reject) => {
 
     //var imageBuffer = decodeBase64Image(baseString);
 
     //Get the image file type
     var type = baseString.split("/")[1].split(";")[0];
 
-
+    console.log("HERE IS THE COMMAND: ", command);
     
     pool.connect((err, client, done) => {
       if (err) {
