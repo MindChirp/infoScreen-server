@@ -459,7 +459,7 @@ router.post("/auth", async (req, res) => {
             
 
             req.session.loggedin = true;
-            req.session.isDeveloper = resu.rows[0].developer;
+            req.session.isDeveloper = resu.rows[0].dev;
             req.session.admin = resu.rows[0].admin;
             req.session.name = resu.rows[0].name;
             req.session.userId = resu.rows[0].id;
