@@ -512,7 +512,7 @@ router.get('/feedBackLogs', async function(req, res) {
   } else {
     var msg = "USER IS NOT DEVELOPER";
     console.log(msg);
-    res.send([msg]);
+    res.status(503).send([msg]);
   }
 });
 
