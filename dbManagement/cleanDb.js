@@ -22,7 +22,7 @@ if(process.env.DEVELOPERMODE) {
 
 pool.on("error", (err, client) => {
   console.log("Unexpected error ", err);
-  process.exit(-1);
+  return;
 })
 
 

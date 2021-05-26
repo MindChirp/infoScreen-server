@@ -401,6 +401,7 @@ async function saveImageFromBlob(baseString, command) {
         console.log(err);
         return;
       }
+      console.log("DATABASE CONNECTED!")
       client.query(command, (err, resu) => {
         done()
         if (err) {
