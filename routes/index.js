@@ -387,7 +387,7 @@ function decodeBase64Image(dataString) {
 }
 
 async function saveImageFromBlob(baseString, command) {
-  return new Promise(async(resolve, reject) => {
+  return new Promise(async(resolve, reject, command) => {
 
     //var imageBuffer = decodeBase64Image(baseString);
 
@@ -402,6 +402,7 @@ async function saveImageFromBlob(baseString, command) {
         return;
       }
       console.log("DATABASE CONNECTED!")
+
       client.query(command, (err, resu) => {
         done()
         if (err) {
