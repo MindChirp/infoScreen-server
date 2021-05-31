@@ -444,7 +444,10 @@ router.post("/auth", async (req, res) => {
         console.log(err);
         return;
       }
-      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated, admin, imagedata FROM users WHERE email='" + user + "' AND password=crypt('" + pass + "', password);", (err, resu) => {
+      client.query("SELECT name, email, dev, subscriber, date, organisation, id, validated, admin, imagedata FROM users WHERE email = $1 AND password = crypt($2, password)", [
+        user,
+        pass
+      ], (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
