@@ -134,7 +134,16 @@ router.post("/register", async(req, res) => {
       if (err) res.status(500).send({message: 'Something went wrong'})
       
       //"INSERT INTO users VALUES('" + user + "', '" + email + "', '" + today + "', 1, '" + pass + "', 0);" LEGACY
-      client.query("INSERT INTO users (name, email, date, subscriber, password, dev, validated) VALUES('" + user + "', '" + email + "', '" + today + "', true, crypt('" + pass + "', gen_salt('bf')), false, false);", (err, resu) => {
+      //name, email, date, subscriber, password, dev, validated
+      client.query("INSERT INTO users (name, email, date, subscriber, password, dev, validated) VALUES($1, $2, $3, $4, crypt($5, gen_salt('bf')), $6, $7);", [
+        user,
+        email,
+        today,
+        true,
+        pass,
+        false,
+        true
+      ], (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -157,7 +166,7 @@ function startVerification(user, email) {
   //Add an entry to the validation table
   pool.connect((err, client, done)=>{
     if(err) throw err;
-    client.query("INSERT INTO validation (name, email) VALUES ('" + user + "', '" + email + "');", (err, results) => {
+    client.query("INSERT INTO validation (name, email) VALUES ($1, $2);", [user, email], (err, results) => {
       done();
       if(err) {return err} else {
         
@@ -226,7 +235,7 @@ router.post("/postFeedBack", async (req, res) => {
 
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query("INSERT INTO feedback (subject, email, body) VALUES('" + subj + "', '" + email + "', '" + body + "');", (err, resu) => {
+      client.query("INSERT INTO feedback (subject, email, body) VALUES($1, $2, $3);", [subj, email, body], (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -271,7 +280,7 @@ router.post('/applyOrg', (req, res)=>{
         console.log(err);
         return;
       }
-      client.query("INSERT INTO organisations (name, owner, description, password, email) VALUES('" + name + "', '" + usrName + "', '" + body + "', crypt('" + pass + "', gen_salt('bf')), '" + email + "') RETURNING id;", (err, resu) => {
+      client.query("INSERT INTO organisations (name, owner, description, password, email) VALUES($1, $2, $3, crypt($4, gen_salt('bf')), $5) RETURNING id;", [name, usrName, body, pass, email], (err, resu) => {
         done()
         if (err) {
           console.log(err.stack)
@@ -394,7 +403,7 @@ async function saveImageFromBlob(baseString, command) {
     //Get the image file type
     var type = baseString.split("/")[1].split(";")[0];
 
-    console.log("HERE IS THE COMMAND: ", command);
+    //POSSIBLE SQL INJECTION WEAKPOINT
     
     pool.connect((err, client, done) => {
       if (err) {
@@ -534,7 +543,7 @@ router.get('/organisation/checkStatus', function(req, res) {
   //Fetch organisation status
   pool.connect((err, client, done) => {
     if (err) throw err
-    client.query("SELECT name, accepted, id, owner, useraccepted FROM organisations WHERE owner='" + name + "' AND email='" + email + "';", (err, resu) => {
+    client.query("SELECT name, accepted, id, owner, useraccepted FROM organisations WHERE owner=$1 AND email=$2;", [name, email], (err, resu) => {
       done()
       if (err) {
         res.status(500).send({message:'Could not load organisation information'})
@@ -573,7 +582,11 @@ router.post("/organisation/userVerify", (req, res) => {
     //Post userverify
     pool.connect((err, client, done) => {
       if (err) {console.log(err); res.status(500).send({message: "Could not activate"})}
-      client.query("UPDATE organisations SET useraccepted=true WHERE owner='" + name + "' AND email='" + email + "' AND password=crypt('" + pass + "', password) RETURNING accepted, useraccepted;", (err, resu) => {
+      client.query("UPDATE organisations SET useraccepted=true WHERE owner=$1 AND email=$2 AND password=crypt($3, password) RETURNING accepted, useraccepted;", [
+        name, 
+        email, 
+        pass
+      ], (err, resu) => {
         done()
         if (err) {
           res.status(500).send({message:'Could not load organisation information'})
